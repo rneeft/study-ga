@@ -43,4 +43,4 @@ jobs:
         uses: actions/upload-artifact@v2.2.3
         with:
           name: pdf
-          path: document/*.pdf
+          path: thesis/*.pdf
