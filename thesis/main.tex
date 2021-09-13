@@ -1,0 +1,59 @@
+\documentclass{ou-report-vaf}
+
+% Dit template is gemaakt door P.J. Molijn in het kader van zijn afstuderen aan de OU in 2014.
+% Waarvoor hartelijk dank.
+% Minieme maar belangrijke wijzigingen zijn aangebracht door E.M. van Doorn
+% Het template is versimpeld door Sylvia Stuurman, 2019.
+% Het template is aangepast voor de ba informatica door Harrie Passier, Tanja Vos en Pekka Aho 2020 
+% Het tamplate is aangepast met nieuwe huisstyle door Rick Neeft, 2021
+
+\def\mytitle{How can automated comparison of inferred models help testers finding bugs?}
+\def\myauthor{Rick Neeft}
+\def\myStudentId{851829973}
+\def\myPresentationDate{T.B.D. 2022}
+
+\begin{document}
+
+    \pagenumbering{roman}
+
+    % Elements of the thesis
+    \input{front-cover}
+    
+    % Page 2 must be left blank
+    \myemptypage
+    
+    % Page 3 contains all compulsory data.
+    \input{compulsory-data}
+    
+    % Acknowledgements
+    %\input{content/A-Acknowledgements}
+    %\myemptypage
+    
+    % Table of contents
+    \begingroup
+        \hypersetup{linkcolor=black}
+        \tableofcontents
+    \endgroup
+    \newpage
+    
+    % Summary
+    %\input{content/B-Summary}
+    %\newpage
+    
+    % the content of the thesis
+    \pagenumbering{arabic}
+    
+    
+    \input{content/1-Introduction}
+    \newpage
+    % Reference list
+    % keep using the alpha style, this makes it easier for the reader to correlate the used citations
+    \bibliographystyle{alpha}
+    \bibliography{bibliography}
+    
+    % List of abbreviations
+    
+    
+    % Appendices
+
+\end{document}

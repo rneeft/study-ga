@@ -1,0 +1,46 @@
+%%%% TITLE PAGE %%%%%%%
+% front cover should be a empty as possible. Title (subtitle) - Name - student Id and thesis presentation date
+
+%to prevent that the title page will be referred as page 1, 
+%which will give the warning that there is a page 1 twice.
+
+\pagestyle{plain}
+
+\begin{titlepage}
+    \newgeometry{right=100pt,left=58.8pt}
+
+    \pagecolor{ou-light-gray}
+    \afterpage{\nopagecolor}
+    
+    %% Insert the OU logo at the top right corner of the page
+    %% PowerPoint contains 84 pt margin in picture
+    \begin{tikzpicture}[remember picture,overlay]
+                \node at (current page.north east)[anchor=north east,inner sep=58.8pt]{
+            \includegraphics[scale=0.5]{images/ou-text-logo.png}
+        };
+    \end{tikzpicture}
+    
+    %% Extra whitespace at the top.
+    \vspace*{5\bigskipamount}
+    
+    %% add title without hypens
+    \nohyphens{{\color{ou-red}\Huge\bf \mytitle}}
+     
+    \bigskip
+    %{\large subtitle, if any}
+    
+    %\bigskip \bigskip
+    %by
+    \bigskip \bigskip
+    
+    {\Large\bf \myauthor}\\
+    {\large\myStudentId}
+    
+    {\myPresentationDate}
+    
+\end{titlepage}
+
+% reset geometry since we changed them for the title page
+\newgeometry{right=0.875in,left=.875in}
+
+%%%% END TITLE PAGE %%%%%%%
