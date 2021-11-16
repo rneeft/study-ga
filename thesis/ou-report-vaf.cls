@@ -26,6 +26,7 @@
 \RequirePackage{subfigure}
 \RequirePackage{graphics}
 \RequirePackage{geometry}
+\usepackage{tabularx}
 \usetikzlibrary{decorations,decorations.pathmorphing,arrows,arrows.meta,automata,trees,backgrounds,petri,shapes,shapes.geometric,quotes,fit,positioning,calc}
 \RequirePackage[pagebackref=true,plainpages=false]{hyperref}
 \newcommand*\ourmfamily{\rmfamily}
@@ -58,6 +59,7 @@
 \definecolor{ou-green}{RGB}{0,157,61}
 \definecolor{ou-pink}{RGB}{232,46,138}
 \definecolor{ou-gray}{RGB}{236,236,236}
+\definecolor{ou-white}{cmyk}{0,0,0,0}
 
 %% Use OU red as the color for titles
 \colorlet{title}{ou-red}
@@ -220,7 +222,6 @@
 }
 \lstset{style=mystyle}
 
-
 %% create style for research question list
 \newlist{questions}{enumerate}{2}
 \setlist[questions,1]{label=\textbf{RQ\arabic*},ref=RQ\arabic*}
@@ -231,3 +232,9 @@
     \thispagestyle{empty}
     \newpage
 }
+
+%% including acronyms
+\usepackage[acronym, toc]{glossaries}
+\makenoidxglossaries
+
+\include{acronyms}
