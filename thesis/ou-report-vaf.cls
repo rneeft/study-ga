@@ -1,7 +1,6 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesClass{ou-report-vaf}[2021/09/12 v2 Open Universiteit report class]
 
-\RequirePackage[dutch,english]{babel}
 
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{article}}
 \ExecuteOptions{english}
@@ -20,6 +19,7 @@
 \RequirePackage[nottoc]{tocbibind}
 \RequirePackage{xcolor}
 \RequirePackage{xkeyval}
+\RequirePackage{soul}
 \RequirePackage{listings}
 \usepackage{pdflscape}
 \RequirePackage[titletoc]{appendix}
@@ -222,6 +222,26 @@
 }
 \lstset{style=mystyle}
 
+%% adding a style for code
+\lstdefinestyle{nonrstyle}{
+    backgroundcolor=\color{ou-white},   
+    commentstyle=\color{ou-green},
+    keywordstyle=\color{ou-red},
+    numberstyle=\tiny\color{ou-white},
+    stringstyle=\color{ou-purple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,
+    breaklines=true,
+    numbers=left,
+    captionpos=b,
+    keepspaces=true,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,          
+    tabsize=2
+}
+
 %% create style for research question list
 \newlist{questions}{enumerate}{2}
 \setlist[questions,1]{label=\textbf{RQ\arabic*},ref=RQ\arabic*}
@@ -238,3 +258,10 @@
 \makenoidxglossaries
 
 \include{acronyms}
+
+%% makes sure every section starts on a new page except when the section is the first on a chapter.
+%% credits: https://tex.stackexchange.com/a/47049
+\usepackage{etoolbox}
+\pretocmd{\section}{%
+  \ifnum\value{section}=0 \else\clearpage\fi
+}{}{}
