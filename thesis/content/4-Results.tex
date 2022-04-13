@@ -80,7 +80,7 @@ The solution is divided into two major parts. A \testar .NET server and a \testa
 
 Figure \ref{fig:components} shows the three components making up the system. The state model data that \testar generated is saved into the OrientDB graph database, the same database used by the .NET server. The .NET UI connects to the .NET server. In the following sections, the different components are explained. 
 
-\subsubsection{OrientDB Component}
+\subsection{OrientDB Component}
 OrientDB is the data storage for \testar. The created application presents the data to the user. In order to query the data, the \textsc{rest} endpoint of OrientDB is used. A \textsc{post} is sent to OrientDB with the query and parameters in the body of the request. An example of the body is displayed in listing \ref{code:example-body}.
 
 \begin{lstlisting}[language=xml, caption=Get AbstractStateModel by the model identifier, label=code:example-body]
@@ -98,7 +98,7 @@ The current solution in which the queries are send from the UI to the .NET serve
 
 It is not recommended to expose the OrientDB database directly to a public network \cite{orientdb-security}. To build the application with good security in mind, the database is exposed through a Proxy/middle-ware component, the .NET server. In the next section the .NET server component is explained in more detail.
 
-\subsubsection{.NET Server}
+\subsection{.NET Server}
 
 The .NET Server servers as Proxy between the .NET UI component and the already existing OrientDB graph database. The only user of the .NET server is UI component. However it is possible to have other applications use to .NET Server to query data stored in OrientDB. 
 
@@ -114,7 +114,7 @@ is signed by the sever.
 
 In Addition to data is user identies also stored in the OrientDB database. 
 
-\subsubsection{.NET UI}
+\subsection{.NET UI}
 The .NET UI component is created in Blazor. Blazor is an interactive web UI technology that allows running .NET code in the browser \cite{what-is-blazor}. For the graphical layer, Blazor uses HTML. The Blazor application runs in a browser, which can provide the user with all kinds of tools for troubleshooting. Bootstrap is used as a front-end framework \footnote{\url{https://getbootstrap.com}}.
 
 Instead of writing the application code in Javascript, Blazor uses C\# and the .NET Core framework, although it is still possible to use existing Javascript libraries. For example, the state model visualisation engine, Cytoscape, is moved from the \testar analysis engine to the new \testarnet UI.
@@ -127,14 +127,14 @@ The UI component is publicly available on \url{https://app.testarin.net} (read a
 
 Based on user feedback, a docker container with the UI application is published to the docker hub \footnote{\url{https://hub.docker.com/repository/docker/rneeft/testar-net-ui}}. In the docker container, the Nginx \footnote{\url{https://nginx.org/en/}} web server hosts the static site.
 
-\subsubsection{Authentication \& Authorisation}
+\subsection{Authentication \& Authorisation}
 The .NET server helps with solving the security issues but still provide a secure and open authentication endpoint. External applications that want to use the .NET endpoints must first authenticate with the .NET server upon it will return a \acrfull{jwt}. A JWT is defined as a "compact, URL-safe means of representing claims to be transferred between two parties." \cite{jones2015json}.
 
 Before the user can use the UI it needs to authenticate itself. Figure \ref{fig:auth-sd} shows the sequence diagram how the authentication flow is handled. Since the user identities are stored in the identity provider of the graph database, it is important to note that the .NET server does neither handle authentication nor authorisation. As visible in the figure it only provides a sign in proxy and generated a JWT around the oSessionId. The authentication and authorisation is handled by the OrientDB server. When the user provides incorrect credentials, the graph database will return a \verb|401 Unauthorized| and the Server will return that status code to the UI.
 
 \begingroup
 \captionsetup{type=figure}
-\includegraphics[scale=0.6]{thesis/images/authentication.jpg}
+\includegraphics[scale=0.4]{thesis/images/authentication-sd.png}
 \captionof{figure}{Authentication sequence (UML 2.0)}\label{fig:auth-sd}
 \endgroup
 
