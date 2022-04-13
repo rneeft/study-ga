@@ -51,6 +51,9 @@ Anomoli detection for change. most change happen on one stap. What if the it sto
  source: meeting 2 dec with IVVES 
  
 \section{\ref{rq:useful-detection} Which properties make a model useful for change detection?}
+
+Dynamic are not usable since they can change without detectable reason. \cite{mulders2022Statemodel}
+
 \section{\ref{rq:testar-config} Which \testar configuration will generate a useful model?}
 \section{\ref{rq:finding-changes} How can we find changes between two models?}
 
@@ -64,6 +67,9 @@ using a fast mode
 the fast mode will only look into changes on the abstract level. Changes like different colours for example
 
 
+\subsection{Calibration}
+\subsection{Difference Engine}
+\subsection{Difference Graph}
 
 
 \section{\ref{rq:tooling} What tooling is available to show the detected differences?}
@@ -75,10 +81,12 @@ The solution is divided into two major parts. A \testar .NET server and a \testa
 \begingroup
 \captionsetup{type=figure}
 \includegraphics[scale=0.7]{thesis/images/server-ui-comp.png}
-\captionof{figure}{.NET UI - Server and OrientDb component model}\label{fig:components}
+\captionof{figure}{.NET UI - Server and OrientDb component model (UML 2.0)}\label{fig:components}
 \endgroup
 
 Figure \ref{fig:components} shows the three components making up the system. The state model data that \testar generated is saved into the OrientDB graph database, the same database used by the .NET server. The .NET UI connects to the .NET server. In the following sections, the different components are explained. 
+
+%Since both the server and the UI are running C\# code, it is possible to share the core application code in both projects. As a side benefit, the core application code can be reused in smaller applications dedicated to a single task, like change detection. 
 
 \subsection{OrientDB Component}
 OrientDB is the data storage for \testar. The created application presents the data to the user. In order to query the data, the \textsc{rest} endpoint of OrientDB is used. A \textsc{post} is sent to OrientDB with the query and parameters in the body of the request. An example of the body is displayed in listing \ref{code:example-body}.
@@ -92,7 +100,7 @@ OrientDB is the data storage for \testar. The created application presents the d
 }
 \end{lstlisting}
 
-An alternative way of querying the data is to use the Query \textsc{get} operation. While it is an easy way to query the data it is vanurable to SQL injection since the paramaters are directly used in the URL and can therefor be altered.
+An alternative way of querying the data is to use the Query \textsc{get} operation. While it is an easy way to query the data it is vulnerable to SQL injection since the parameters are directly used in the URL and can therefor be altered.
 
 The current solution in which the queries are send from the UI to the .NET server is not completely fool proof either. It is still possible to, for example by using the Burp Suite, to alter the \textsc{post} message body and attach the OrientDB server. To circumvent this issue it would be recommended to setup a \textsc{rest} endpoints that returns data and lets the .NET server creates the SQL calls to OrientDB. 
 
@@ -108,24 +116,26 @@ The second issue prevented the UI to read the cookie created by OrientDB. Before
 
 It was impossible to retrieve the \textsc{osessionid} and reuse it in the data retrieval processes. Not able to save the \textsc{osessionid} resulted in saving the username and password in local storage of the browser, making it available for retrieval with a Cross Site Scripting attack. 
 
-database need to be provided in the configuration. Based on user feedback it also possible to enable multi database command. With that feature -> user can access multiple database by providing database name before username 
-
-is signed by the sever. 
-
-In Addition to data is user identies also stored in the OrientDB database. 
+The OrienDB url and \testar state model data are provided in the server configuration. Based on user feedback it also possible to enable multi database feature. With that feature it becomes possible to specify the name of the database during logging in. For example, if the user wants to connect to the database \verb|TestarData| and the username is \verb|Kirk|, the username for sign in becomes: \verb|TestarData\Kirk|.
 
 \subsection{.NET UI}
-The .NET UI component is created in Blazor. Blazor is an interactive web UI technology that allows running .NET code in the browser \cite{what-is-blazor}. For the graphical layer, Blazor uses HTML. The Blazor application runs in a browser, which can provide the user with all kinds of tools for troubleshooting. Bootstrap is used as a front-end framework \footnote{\url{https://getbootstrap.com}}.
+With the \testar application it is possible to open an analysis website \cite{thesisMulders}. This website provided a couple of features like viewing the viewing the state models, Test sequences and a graph engine created with Cytoscape.js. To view this analysis website the user have to install \testar on their machine. In this thesis a new website is presented, that can be used outside the \testar application. It got a fresh look and feel, created with Bootstrap\footnote{\url{https://getbootstrap.com}} and a noticeable increase in performance. Figure \ref{fig:ui-home-page} show the new available models screen. 
 
-Instead of writing the application code in Javascript, Blazor uses C\# and the .NET Core framework, although it is still possible to use existing Javascript libraries. For example, the state model visualisation engine, Cytoscape, is moved from the \testar analysis engine to the new \testarnet UI.
+\begingroup
+\captionsetup{type=figure}
+\includegraphics[scale=0.4]{thesis/images/ui-home-page.png}
+\captionof{figure}{Available models in the new \testar website}\label{fig:ui-home-page}
+\endgroup
 
-Since both the server and the UI are running C\# code, it is possible to share the core application code in both projects. As a side benefit, the core application code can be reused in smaller applications dedicated to a single task, like change detection. 
+The new \testar analysis website is created in Blazor. Blazor is an interactive web UI technology that allows running .NET code in the browser \cite{what-is-blazor}. For the graphical layer, Blazor uses HTML. The application code is wrtiten in C\# although some parts are still coded in Javascript. 
 
-The UI component needs to be hosted on a web server that can host static files. Blazor is interactive by nature, but from the server's perspective, is it a static site since it does not have any server-side code execution. All code executions are handled on the user's computer. Before the user can use the website, it is downloaded on its computer before it gets executed. After the download, the application runs on the user's computer and the traffic to and from the .NET server will not travel through the public internet. 
+The code required to display the state graph, as shown in figure \ref{fig:graph-page}, has been copied from the original \testar analysis website. Beside the HTML layer and the retrieval of the raw model data, nothing has been altered. The graph engine is still using the Cytoscape library. 
 
-The UI component is publicly available on \url{https://app.testarin.net} (read as \testar in dot net). 
-
-Based on user feedback, a docker container with the UI application is published to the docker hub \footnote{\url{https://hub.docker.com/repository/docker/rneeft/testar-net-ui}}. In the docker container, the Nginx \footnote{\url{https://nginx.org/en/}} web server hosts the static site.
+\begingroup
+\captionsetup{type=figure}
+\includegraphics[scale=0.3]{thesis/images/graph-page.png}
+\captionof{figure}{The new Graph page}\label{fig:graph-page}
+\endgroup
 
 \subsection{Authentication \& Authorisation}
 The .NET server helps with solving the security issues but still provide a secure and open authentication endpoint. External applications that want to use the .NET endpoints must first authenticate with the .NET server upon it will return a \acrfull{jwt}. A JWT is defined as a "compact, URL-safe means of representing claims to be transferred between two parties." \cite{jones2015json}.
@@ -177,32 +187,20 @@ since jwt is signed with a secret only known by the server, the server can valid
 
 
 
+\subsection{Hosting the components}
+The two new components presented in this thesis, .NET server and the \testar analysis website, need to be hosted on two individual web servers. The .NET server needs to be able to execute server side code. 
+
+The new \testar Analysis website needs to be hosted on a web server that can host static files. Blazor is interactive by nature, but from the server's perspective, is it a static site since it does not have any server-side code execution. All code executions are handled on the user's computer. Before the user can use the website, it is downloaded on its computer before it gets executed. After the download, the application runs on the user's computer and the traffic to and from the .NET server will not travel through the public internet but stays on the local area network. 
+
+The new \testar analysis website is publicly available on \url{https://app.testarin.net} (read as app dot \testar in dot net). The .NET server need to be hosted on the network of the user. It need to be able to access the OrientDB server. 
+
+To help setting up the two components, two separate docker images are created. Both are available on the docker hub: \verb|rneeft/testar-net-server|\footnote{\url{https://hub.docker.com/repository/docker/rneeft/testar-net-server}} and \verb|rneeft/testar-net-ui|\footnote{\url{https://hub.docker.com/repository/docker/rneeft/testar-net-ui}}.
 
 
-
-\subsubsection{Hosting the application}
-In section \ref{sec:testar-in-docker} is indicated that \testar is running in a docker container. The new .NET components are also published as docker containers. 
-
-
-For all applications, a docker image is created. 
-
-
-
-
-
-Blazor
-
-two second
-Testar server
-security
-proxy , 
-image
-Testar UI
-
-docker image
 
 \section{\ref{rq:type-visualisation} How to visualise change?}
 
+difference engine
 merge graph \cite{andrews2009visual}
 the graph needs to be similar are "enough"
 
