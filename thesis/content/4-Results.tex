@@ -73,10 +73,9 @@ the fast mode will only look into changes on the abstract level. Changes like di
 
 
 \section{\ref{rq:tooling} What tooling is available to show the detected differences?}
+The new application is written outside the \testar application. Doing so makes it possible to work without the context and dependencies of \testar and allows the application to be written in a language more known by the developer. The only dependency it has with \testar is the OrientDB graph database.
 
-The solution is written outside the \testar application. Doing so makes it possible to work without the context and dependencies of \testar and allows the application to be written in a language more known by the developer. Building the application outside the \testar scope was possible because it only needed the state model data from the OrientDB graph database.
-
-The solution is divided into two major parts. A \testar .NET server and a \testar .NET UI. As the name suggests, they are built and created in the Framework from Microsoft: .NET Core (version 6) \footnote{\url{https://dot.net}}. .NET is an open-source, cross-platform framework. An application created with .NET will run on Windows, Linux and macOS. 
+Besides OrientDB, the solution is divided into two major parts. A \testar proxy, named .NET server, and a new \testar analysis website. As the name suggests, they are built and created in Framework from Microsoft: .NET Core (version 6) \footnote{\url{https://dot.net}}. .NET is an open-source, cross-platform framework. An application created with .NET will run on Windows, Linux and macOS. 
 
 \begingroup
 \captionsetup{type=figure}
@@ -84,12 +83,12 @@ The solution is divided into two major parts. A \testar .NET server and a \testa
 \captionof{figure}{.NET UI - Server and OrientDb component model (UML 2.0)}\label{fig:components}
 \endgroup
 
-Figure \ref{fig:components} shows the three components making up the system. The state model data that \testar generated is saved into the OrientDB graph database, the same database used by the .NET server. The .NET UI connects to the .NET server. In the following sections, the different components are explained. 
+Figure \ref{fig:components} shows the three components making up the system. The state model data that \testar generated is saved into the OrientDB graph database, and the .NET server uses the same database. The new \testar analysis website connects to the .NET server. In the following sections, the different components are explained. 
 
-%Since both the server and the UI are running C\# code, it is possible to share the core application code in both projects. As a side benefit, the core application code can be reused in smaller applications dedicated to a single task, like change detection. 
+Since both the .NET server and the website are running .NET, they use the same core library. Using the same core library makes it easy to share code. As an extra benefit, the core library can be reused in other applications dedicated to a single task. 
 
 \subsection{OrientDB Component}
-OrientDB is the data storage for \testar. The created application presents the data to the user. In order to query the data, the \textsc{rest} endpoint of OrientDB is used. A \textsc{post} is sent to OrientDB with the query and parameters in the body of the request. An example of the body is displayed in listing \ref{code:example-body}.
+OrientDB is the data storage for \testar. The new application presents the data to the user. In order to query the data, the \verb|REST| API of OrientDB is used. A \verb|POST| is sent to OrientDB with the query and parameters in the request's body. An example of the body is displayed in listing \ref{code:example-body}.
 
 \begin{lstlisting}[language=xml, caption=Get AbstractStateModel by the model identifier, label=code:example-body]
 {
@@ -100,26 +99,25 @@ OrientDB is the data storage for \testar. The created application presents the d
 }
 \end{lstlisting}
 
-An alternative way of querying the data is to use the Query \textsc{get} operation. While it is an easy way to query the data it is vulnerable to SQL injection since the parameters are directly used in the URL and can therefor be altered.
+An alternative way of querying the data is using the query \verb|GET| operation. While it is easy to query the data, it is vulnerable to SQL injection since the parameters are directly used in the SQL query. Those parameters can be changed by user input. 
 
-The current solution in which the queries are send from the UI to the .NET server is not completely fool proof either. It is still possible to, for example by using the Burp Suite, to alter the \textsc{post} message body and attach the OrientDB server. To circumvent this issue it would be recommended to setup a \textsc{rest} endpoints that returns data and lets the .NET server creates the SQL calls to OrientDB. 
+The current solution in which the queries are sent from the UI to the .NET server is not entirely foolproof either. For example, using the Burp Suite is still possible to alter the \verb|POST| message body and attack the OrientDB database. This issue can be circumvented by setting up \verb|REST| endpoints on the.NET Server that created the SQL calls on the server-side.
 
-It is not recommended to expose the OrientDB database directly to a public network \cite{orientdb-security}. To build the application with good security in mind, the database is exposed through a Proxy/middle-ware component, the .NET server. In the next section the .NET server component is explained in more detail.
+It is not recommended to expose the OrientDB database directly to a public network \cite{orientdb-security}. Besides the orientDb recommended best practices and issues accessing the database on a web frontend, a proxy/middleware component is built. The following section explains the .NET server in more detail. 
 
-\subsection{.NET Server}
+\subsection{.NET Server} \label{sec:net-server}
+The .NET Server serves as a proxy between the new \testar analysis website and the existing OrientDB graph database. It also provides an easy to use endpoint for other to-be-build applications.
 
-The .NET Server servers as Proxy between the .NET UI component and the already existing OrientDB graph database. The only user of the .NET server is UI component. However it is possible to have other applications use to .NET Server to query data stored in OrientDB. 
+The need for the .NET Server was due to browser restrictions and limitations in accessing the database. Two issues arose when the UI was trying to connect to the database. The issue was \acrfull{cors}. CORS is a security feature in which a web server can permit or deny requests from a website if the request was not made from a trusted source \cite{cors}. By default OrientDB does not permit other websites to use their \verb|REST| endpoints \cite{orientdb-webserver}. It is possible to enable CORS in the OrientDB configuration, but before the .NET application can be used, administrators should edit the OrientDB configuration. Although it would solve the CORS issue, a second issue involving the cookie is not solved.
 
-The need for the .NET Server was due to browser restrictions and limitations accesing the Database. Two issues arise when the UI was trying to connect to the Database. The issue was \acrfull{cors} and it a security feature in which the server can permit or denay a request from a client if the request was not made by a trusted source \cite{cors}. By default OrientDB does not permit other websites to use the \textsc{rest} endpoints from OrientDB \cite{orientdb-webserver}. It is possible to enable to CORS in the OrientDB configuration but that would mean administrators should edit the OrientDB config before the .NET application could be used and secondly it would not fix the second issue, accessing the session cookie.
+The second issue prevented the analysis website from accessing and reading the cookie created by OrientDB. OrientDB saves a cookie, the session token. Before a user can query the data, it needs to sign in to OrientDB. Sign in is accomplished by executing a \verb|GET| command to the \verb|/connect/database| endpoint and providing the username and password, encoded with the base64 algorithm, as an authentication header. The OrientDB will return a \verb|200 OK| response with a \verb|osessionid| in the response headers if the credentials are valid. The \verb|osessionid| authenticates the user on future calls.
 
-The second issue prevented the UI to read the cookie created by OrientDB. Before a user can query the data it need to sign in the OrientDB. This is accounplised by executing a \textsc{get} command to the /connect/database endpoint and provide the username and password, encoded with the base64 algorithm, as a authentication header. If the credentials are valid, the OrientDB will return a \textsc{204 ok} response with a \textsc{osessionid} in the response headers. The \textsc{osessionid} is used to authenticate the user on future calls.
+It was impossible to retrieve the \verb|osessionid| header and reuse it in the further data retrieval calls. Because the web browser blocked the session header, we could store the users' credentials in local storage, making them available for retrieval with a Cross-Site Scripting attack. Section \ref{sec:auth} will look into authentication and authorisation in more detail.
 
-It was impossible to retrieve the \textsc{osessionid} and reuse it in the data retrieval processes. Not able to save the \textsc{osessionid} resulted in saving the username and password in local storage of the browser, making it available for retrieval with a Cross Site Scripting attack. 
+The OrienDB URL and name of the \testar state model database are provided in the server configuration. Based on user feedback, it is also possible to enable muti-database features. Enabling the multi-database feature enables to user to specify the name of the database during logging in. For example, if the user wants to connect to the database \verb|TestarData| and the username is \verb|Kirk|, the username for sign in becomes: \verb|TestarData\Kirk|.
 
-The OrienDB url and \testar state model data are provided in the server configuration. Based on user feedback it also possible to enable multi database feature. With that feature it becomes possible to specify the name of the database during logging in. For example, if the user wants to connect to the database \verb|TestarData| and the username is \verb|Kirk|, the username for sign in becomes: \verb|TestarData\Kirk|.
-
-\subsection{.NET UI}
-With the \testar application it is possible to open an analysis website \cite{thesisMulders}. This website provided a couple of features like viewing the viewing the state models, Test sequences and a graph engine created with Cytoscape.js. To view this analysis website the user have to install \testar on their machine. In this thesis a new website is presented, that can be used outside the \testar application. It got a fresh look and feel, created with Bootstrap\footnote{\url{https://getbootstrap.com}} and a noticeable increase in performance. Figure \ref{fig:ui-home-page} show the new available models screen. 
+\subsection{New \testar analysis website}
+With the \testar application, it is possible to open an analysis website \cite{thesisMulders}. This website provided several features like viewing the available state models, Test sequences and a graph engine created with Cytoscape.js. The user has to install \testar on their machine to view this analysis website. This thesis presents a new website that can be used outside the \testar application. It got a fresh look and feel, created with Bootstrap\footnote{\url{https://getbootstrap.com}} and a noticeable increase in performance. Figure \ref{fig:ui-home-page} show the renewed available models screen. 
 
 \begingroup
 \captionsetup{type=figure}
@@ -127,9 +125,9 @@ With the \testar application it is possible to open an analysis website \cite{th
 \captionof{figure}{Available models in the new \testar website}\label{fig:ui-home-page}
 \endgroup
 
-The new \testar analysis website is created in Blazor. Blazor is an interactive web UI technology that allows running .NET code in the browser \cite{what-is-blazor}. For the graphical layer, Blazor uses HTML. The application code is wrtiten in C\# although some parts are still coded in Javascript. 
+The new \testar analysis website is created in Blazor. Blazor is an interactive web UI technology that allows running .NET code in the browser \cite{what-is-blazor}. For the graphical layer, Blazor uses HTML. Although some parts are still coded in Javascript, the application code is written in C\#. 
 
-The code required to display the state graph, as shown in figure \ref{fig:graph-page}, has been copied from the original \testar analysis website. Beside the HTML layer and the retrieval of the raw model data, nothing has been altered. The graph engine is still using the Cytoscape library. 
+The code required to display the state graph, as shown in figure \ref{fig:graph-page}, has been copied from the original \testar source code. Besides the HTML layer and the retrieval of the raw model data, nothing has been altered. The graph engine is still using the Cytoscape.js library. 
 
 \begingroup
 \captionsetup{type=figure}
@@ -137,10 +135,10 @@ The code required to display the state graph, as shown in figure \ref{fig:graph-
 \captionof{figure}{The new Graph page}\label{fig:graph-page}
 \endgroup
 
-\subsection{Authentication \& Authorisation}
-The .NET server helps with solving the security issues but still provide a secure and open authentication endpoint. External applications that want to use the .NET endpoints must first authenticate with the .NET server upon it will return a \acrfull{jwt}. A JWT is defined as a "compact, URL-safe means of representing claims to be transferred between two parties." \cite{jones2015json}.
+\subsection{Authentication \& Authorisation} \label{sec:auth}
+The .NET server helps with solving the security issues mentioned in ref{sec:net-server}  while still providing a secure and open authentication endpoint. External applications that want to use the endpoints must first authenticate with the .NET server upon it will return a \acrfull{jwt}. A JWT is a \textit{"compact, URL-safe means of representing claims to be transferred between two parties."} \cite{jones2015json}.
 
-Before the user can use the UI it needs to authenticate itself. Figure \ref{fig:auth-sd} shows the sequence diagram how the authentication flow is handled. Since the user identities are stored in the identity provider of the graph database, it is important to note that the .NET server does neither handle authentication nor authorisation. As visible in the figure it only provides a sign in proxy and generated a JWT around the oSessionId. The authentication and authorisation is handled by the OrientDB server. When the user provides incorrect credentials, the graph database will return a \verb|401 Unauthorized| and the Server will return that status code to the UI.
+Before the user can use the \testar analysis website, it must authenticate itself. Figure \ref{fig:auth-sd} shows the sequence diagram of how the authentication flow is handled. Since the user identities are stored in the identity provider of the graph database, it is essential to note that the .NET server does neither handle authentication nor authorisation. The OrientDB Server handles the authentication and authorisation. The figure shows that the .NET server proxies the credentials and returns a JWT with the \verb|osessionid| as data. When the user provides incorrect credentials, the OrientDB will return a \verb|401 Unauthorised|, and the .NET server will return that status code.
 
 \begingroup
 \captionsetup{type=figure}
@@ -148,7 +146,7 @@ Before the user can use the UI it needs to authenticate itself. Figure \ref{fig:
 \captionof{figure}{Authentication sequence (UML 2.0)}\label{fig:auth-sd}
 \endgroup
 
-An example of the JWT generated by the server is displayed in listing \ref{code:jwt}. The JWT can be decoded by anyone, for example with a website like \url{https://jwt.io}. The corresponding header and payload is displayed in listing \ref{code:jwt-payload}. In the JWT, two dots are visible which shows the different sections of the token. The first section is dedicated to the header information (lines 1-4 in listing \ref{code:jwt-payload}. The middle section contains the payload (lines 5-12 in listing \ref{code:jwt-payload}). The third and last section contains the signing information. 
+An example of the JWT generated by the .NET server is displayed in listing \ref{code:jwt}. The JWT can be decoded by anyone, for example, with a website like \url{https://jwt.io}. The corresponding header and payload are displayed in listing \ref{code:jwt-payload}. In the JWT, two dots are visible, showing the three sections of the token. The first section is dedicated to the header information (lines 1-4 in listing \ref{code:jwt-payload}). The middle section contains the payload (lines 5-12 in listing \ref{code:jwt-payload}). The third and last section contains the signing information, validating the token. 
 
 \begin{lstlisting}[language=xml, caption=Example JSON Web Token (line breaks for display purposes only), style=nonrstyle, label=code:jwt]
 eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8v
@@ -161,14 +159,9 @@ y9sb2NhbGhvc3QiLCJhdWQiOiJodHRwOi8vbG9jYWxob3N0In
 0.zkSDTOuNrn9lR0ca6JLQsbSiLEskEBC_uY937q9sSU0
 \end{lstlisting}
 
-Every JWT is signed by the server (see the self-message 1.1.3 in figure \ref{fig:auth-sd}) with a secret provided during the startup of the .NET Server. With the signing information, the server can validated that it generated the JWT and that it is safe to assume the information in the payload is legit. 
+The Server signs the JWT (see the self message 1.1.3 in figure \ref{fig:auth-sd}) with a secret provided during the startup of the .NET Server. When the .NET server receives the JWT during a call, it will validate the JWT to ensure it is legit and the information in the payload is not altered.  
 
-There are a couple of intresting claims visible when viewing the payload. exp... by default 5 minutes. same lenght as the orientDB cookie lifetime. Line \verb|6| shows the username of the user. Line \verb|7| shows the OrientDbSession which the .NET server is using to communicate to the graph database. Line \verb|8| displayed the databasename. The databasename is only visible when on the server the feature 'MultipleDatabases' is activated. Lines \verb|9| (exp), \verb|10| (iss) and \verb|11| (aud) are showing the claims registered in the \acrfull{iana} \cite{jones2015json}. \verb|exp| Stands for 'expiration' and shows the expiration time in seconds (in Unix epoch). By default the expiration time set to 5 minutes, which is the same as the orientdb session id. 
-
-
-
-
-since jwt is signed with a secret only known by the server, the server can validate whether it generated the JWT.
+There are a couple of interesting claims visible when viewing the payload. Line \verb|6| shows the username of the user. Line \verb|7| shows the OrientDbSession which the .NET server is using to communicate to the graph database. Line \verb|8| displayed the databasename. The databasename is only visible when on the Server the feature 'MultipleDatabases' is activated. Lines \verb|9| (exp), \verb|10| (iss) and \verb|11| (aud) are showing the claims registered in the \acrfull{iana} \cite{jones2015json}. \verb|exp| Stands for 'expiration' and shows the expiration time in seconds (in Unix epoch). By default the expiration time set to 5 minutes, which is the same as the orientdb session id. 
 
 \begin{lstlisting}[language=xml, caption=Decoded JWT header and Payload of the JWT given in listing \ref{code:jwt}, label=code:jwt-payload]
 {
@@ -185,18 +178,14 @@ since jwt is signed with a secret only known by the server, the server can valid
 }
 \end{lstlisting}
 
-
-
 \subsection{Hosting the components}
-The two new components presented in this thesis, .NET server and the \testar analysis website, need to be hosted on two individual web servers. The .NET server needs to be able to execute server side code. 
+The two new components presented in this thesis, .NET server and the \testar analysis website, need to be hosted on two individual web servers. The .NET server needs to be able to execute server-side code. 
 
-The new \testar Analysis website needs to be hosted on a web server that can host static files. Blazor is interactive by nature, but from the server's perspective, is it a static site since it does not have any server-side code execution. All code executions are handled on the user's computer. Before the user can use the website, it is downloaded on its computer before it gets executed. After the download, the application runs on the user's computer and the traffic to and from the .NET server will not travel through the public internet but stays on the local area network. 
+The new \testar Analysis website needs to be hosted on a web server that can host static files. Blazor is interactive by nature, but from a server's perspective, is it a static site since it does not have any server-side code execution. All code executions are handled on the user's computer. Before the user can use the website, it is downloaded on its computer before it gets executed. After the download, the application runs on the user's computer and the traffic to and from the .NET server will not travel through the public internet but stays on the local area network. 
 
-The new \testar analysis website is publicly available on \url{https://app.testarin.net} (read as app dot \testar in dot net). The .NET server need to be hosted on the network of the user. It need to be able to access the OrientDB server. 
+The new \testar analysis website is publicly available on \url{https://app.testarin.net} (read as app dot \testar in dot net). The .NET server needs to be hosted on the network of the user. It needs to be able to access the OrientDB Server. 
 
 To help setting up the two components, two separate docker images are created. Both are available on the docker hub: \verb|rneeft/testar-net-server|\footnote{\url{https://hub.docker.com/repository/docker/rneeft/testar-net-server}} and \verb|rneeft/testar-net-ui|\footnote{\url{https://hub.docker.com/repository/docker/rneeft/testar-net-ui}}.
-
-
 
 \section{\ref{rq:type-visualisation} How to visualise change?}
 
