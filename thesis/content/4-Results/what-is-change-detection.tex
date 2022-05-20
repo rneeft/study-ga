@@ -1,0 +1,47 @@
+\section{\ref{rq:what-is-change-detection} What is change-detection, and what do we want to use it for?}
+
+\subsection{What is change?} \label{what-is-change}
+
+Not many research papers could be found that define the word change. A clear definition of the word change can be found in a psychology paper by Rensink \cite{rensink2002change}.
+
+\begin{quote}
+    "The word change generally refers to a transformation or modification of something over time. As such, this notion presumes a nonchanging substrate on which changes are imposed. More precisely, change is defined here [the paper] as the transformation over time of a well-defined, enduring structure." (Rensink, 2002, p. 248).
+\end{quote}
+
+The definition of the word change can be translated to the language of \testar. The "well-defined, enduring structure" refers to the GUI of the system under test, whereas the "transformation over time" refers to the various version of the SUT. The "something" refers to a part of the GUI that can change like: Widget tree, the state or an action. 
+
+Besides defining the word change, Rensink also describes the differences between changes and differences. A change is a transformation of the same 'something', whether a difference lacks the property of the same something. For example, what are the differences between two distinct SUT, or the same SUT but in two distinct environments or Internet Browsers? A limit to the change detection algorithm is that the SUT needs to be executed in the same environment; otherwise, false-positive changes can occur.
+
+This distinction of definitions between change and differences give the first limit to this research paper's proposed change detection algorithm. The change detection algorithm will give the changes of a SUT, between versions, in the same environment since a different environment can influence the model and therefore influence the outcome of the change detection.
+
+\subsection{What change detection?}
+
+toool made by F-secure. collaboration with Pekka GUI Driver. both had features. 
+
+automated masking abstract away know a lot. image comparison. 
+
+GUITAR, something. 
+
+F-secure change detection point it own 
+new tool, no paper. 
+
+Change what we are intresing in.
+
+starting state depends on existng data. external changes removed. 
+
+percent of change pixel could indicate .... div > 50\% change then different. 
+1 level-> differences on the screen.
+2 level-> change in the model (state graph)
+3 level-> Form testing, from testing correct and incorrect form
+ - hint faker library phone number etc...
+ - relationship between 
+
+find values on the new page. releation input value and one of the screen. you input phonenumber. on screen is presented on
+
+metaphorfic testing (relationships). 
+
+Alexander Pretengkro finding state machine. (Aho can connect).
+
+Anomoli detection for change. most change happen on one stap. What if the it stop changes Trent, history change some... change on change detection. 
+ 
+ source: meeting 2 dec with IVVES 
