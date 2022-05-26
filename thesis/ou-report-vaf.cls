@@ -7,6 +7,8 @@
 \ProcessOptions\relax
 \LoadClass[12pt]{report}
 \usepackage{afterpage}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
 \RequirePackage{amsmath}
 \RequirePackage{amssymb}
 \RequirePackage[nooneline,footnotesize]{caption}
