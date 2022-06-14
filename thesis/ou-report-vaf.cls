@@ -186,6 +186,7 @@
 \titlespacing{\chapter}{0pt}{-32pt}{1cm}
 
 
+
 %% Color the bullets of the itemize environment and make the symbol of the third
 %% level a diamond instead of an asterisk.
 \renewcommand*\labelitemi{\color{title}\textbullet}
@@ -267,3 +268,14 @@
 \pretocmd{\section}{%
   \ifnum\value{section}=0 \else\clearpage\fi
 }{}{}
+
+%% creates a command todo. It:
+%% - add a warning in the output to keep track of the todo's
+%% - displays the text in the document. 
+\newcommand{\todo}[1]{
+    \@latex@warning{TODO "#1"} 
+    \textit{
+        \textcolor{ou-red}{\textbf{TODO}:}
+             #1
+    }
+}

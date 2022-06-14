@@ -1,6 +1,6 @@
 \chapter{Related Work}
 
-%% TODO make better introduction for the chapter. 
+\todo{make better introduction for the chapter. }
 
 \section{Background} \label{background}
 This section describes the background of this proposal and contains information that is available but might not be known by students and readers. 
@@ -62,7 +62,7 @@ The \emph{Record} mode allows a tester to record a test sequence manually. In th
 \begingroup
 \captionsetup{type=figure}
 \includegraphics[scale=0.36]{images/testar-test-cycle.png}
-\captionof{figure}{\testar test cycle \cite{testar-presentation}}\label{fig:testar-test-cycle}
+\captionof{figure}{\testar test cycle \cite{VosAho2021}}\label{fig:testar-test-cycle}
 \endgroup
 
 Figure \ref{fig:testar-test-cycle} shows the flow graphically \cite{VosAho2021}. The test specialist needs to provide SUT details to \testar, like which actions should not be executed, and devise a mechanism that defines which SUT behaviour is correct and which is not, named a test oracle (Section \ref{test-oracles}). 
@@ -70,7 +70,7 @@ Figure \ref{fig:testar-test-cycle} shows the flow graphically \cite{VosAho2021}.
 \subsection{How is the SUT tested} \label{test-oracles}
 When software is tested, a method is needed to check the correct behaviour of the SUT. The method of checking is formally known as a \emph{test oracle} \cite{testOracles}. 
 
-Outside the \testar context, an example of a test oracle could be a \emph{assertion} in software code. An assertion is a boolean expression created in a program by a software developer which checks the program's behaviour during run-time \cite{barr2014oracle}. Assertions can also be used in unit tests as displayed below on Listing \ref{code:assert}. 
+Outside the \testar context, an example of a test oracle could be an \emph{assertion} in software code. An assertion is a boolean expression created in a program by a software developer which checks the program's behaviour during run-time \cite{barr2014oracle}. Assertions can also be used in unit tests as displayed below on Listing \ref{code:assert}. 
 
 %% do not indent code since it indents its extra in the LaTeX output
 \begin{lstlisting}[language=Java, caption=Example assertion, label=code:assert]
@@ -144,7 +144,7 @@ In the previous sections, the widget tree is discussed and how the widgets are r
 \captionof{figure}{An graph with two states and two actions.}\label{fig:state-actions}
 \endgroup
 
-The graph is a directed graph since every action changes the GUI from one state to the other. An action may lead to the same state, see figure \ref{fig:state-actions} action \textit{y}. However, that would mean that the action does not do anything or \testar does not indicate a change. For example, the GUI changes but not the property corresponding to the change is not included in the widget tree.
+The graph is a directed graph since every action changes the GUI from one state to the other. An action may lead to the same state, see figure \ref{fig:state-actions} action \textit{y}. However, that would mean that the action does not do anything or \testar does not indicate a change. For example, the GUI changes but the property corresponding to the change is not included in the widget tree.
 
 The universe of states and actions of the SUT's GUI makes up an inferred model. More information about the inferred model and how they are created can be found in section \ref{inferred-model}.
 
@@ -190,7 +190,7 @@ While Murphy is crawling the GUI it is making screenshots of the GUI. Besides th
 
 
 \subsection{Inferred model} \label{inferred-model}
-The master thesis by Mulders had two significant outcomes. The first is an inferred model module, and the second is the visualisation of the inferred models \cite{thesisMulders}. The visualisation model is a web-based application that shows the inferred model with screenshots and properties. Although the visualisation module becomes required when we want to visualise the result of the change-detection software, it is not necessary to go into depth in this document. This section will discuss what an inferred model is and how they are generated. 
+The master thesis by Mulders had two significant outcomes. The first is an inferred model module, and the second is the visualisation of the inferred models \cite{thesisMulders}. The visualisation module is a web-based application that shows the inferred model with screenshots and properties. Although the visualisation module will be required when we want to visualise the results of the change-detection software, it is not necessary to go into depth in this document. This section will discuss what an inferred model is and how they are generated. 
 
 The GUI state was discussed in section \ref{gui-state}. The section ended with the sentence that the universe of states and actions of the SUT's GUI makes up the inferred model. The inferred model is a directed graph showing the GUI-state of the application and the transactions between states. The vertex of the graph represents the GUI-state. Each vertex has a set of incoming and outgoing edges, called the actions. 
 
@@ -219,7 +219,7 @@ Figure \ref{fig:concrete-node} shows an example of a node in the concrete model.
 
 \newpage
 \subsubsection{Abstract model} \label{abstract-model}
-Since the concrete models containing all the data from a GUI-state, they can become quite large.  Therefore an abstraction model is made \cite{thesisMulders}. Figure \ref{fig:abstract-model} shows an example of such a abstract node. The grey lines (from CS-3, CS-6 to AS-3) indicates which concrete state is abstracted. The properties of the abstract node are displayed, what the identifier is and which concrete state(s) it represents.
+Since the concrete models contain all the data from a GUI-state, they can become quite large.  Therefore an abstract state model is made \cite{thesisMulders}. Figure \ref{fig:abstract-model} shows an example of such a abstract node. The grey lines (from CS-3, CS-6 to AS-3) indicates which concrete states are abstracted. The properties of the abstract node are displayed, what the identifier is and which concrete state(s) it represents.
 
 \bigskip
 \begingroup
@@ -252,7 +252,7 @@ Although a Merkle tree usually is a binary tree \cite{merkle-tree}, having more 
 \endgroup
 
 \subsubsection{How is an inferred model created?}
-This research focuses itself on the outcome of the obtain step as illustrated in figure \ref{fig:obtain-state-graph}, which is the top right part of figure \ref{fig:testar-test-cycle}.
+This research focuses itself on the outcome of the obtain state step as illustrated in figure \ref{fig:obtain-state-graph}, which is the top right part of figure \ref{fig:testar-test-cycle}.
 
 \bigskip
 \begingroup
@@ -263,9 +263,9 @@ This research focuses itself on the outcome of the obtain step as illustrated in
 
 Generating the inferred model starts when \testar start testing the SUT. After an action has been executed successfully, the state of the GUI is sent to the inferred model module. When the state is reached without action, it is marked as the initial state. 
 
-The inferred model module generates the abstract and concrete state's and saves those in the model. The model is persisted in the OrientDb database. At last, a deterministic model check is being performed and saved \cite{testar-code}.
+The inferred model module generates the abstract and concrete states and saves those in the model. The model is persisted in the OrientDb database. At last, a deterministic model check is being performed and saved \cite{testar-code}.
 
-\subsection{State model difference}
+\subsection{State model difference} \label{sec:state-model-difference}
 The \verb|StateModel.Difference| package, added by Pastor Ricós\cite{stateDiff}, offers a proof of concept for calculating differences between the inferred state models. For the comparison, the \verb|abstractStateId| is used. 
 
 Pastor Ricós difference algorithm\cite{stateDiff} outputs two classification of changes between two models: added and removed state. Let $A$ be a set of \verb|abstractStateId|s of version 1 of the SUT, and let $B$ be a set of \verb|abstractStateId|s of version 2 of the SUT. The removed states can be written as
@@ -282,7 +282,7 @@ the states that are added can be written as
 Using the \verb|abstractStateId| is excellent for the proof of concept and preliminary change detection, 
 However, its boolean nature in which state exists or not can result in many 'false' changes. For example, when a widget is moved, the change detection should result in an altered state, not a removed and added state. 
 
-Section \ref{state-identifiers} discussed how identifiers are generated, since the differences are calculated based on the \verb|abstractStateId| selecting the correct widget attributes is vital. Choosing too few attributes could result in conflicting differences like the same actions are removed and added. Choosing too many attributes could trigger a change in even the tiniest detail. Choosing the widget attributes can be done with the 'Advance' screen under the State model tab. See Figure \ref{fig:advance}.
+Section \ref{state-identifiers} discussed how identifiers are generated, since the differences are calculated based on the \verb|abstractStateId| selecting the correct widget attributes is vital. Choosing too few attributes could result in conflicting differences like the same actions are removed and added. Choosing too many attributes could trigger a change in even the tiniest detail. Choosing the widget attributes can be done with the 'Advanced' screen under the State model tab. See Figure \ref{fig:advance}.
 
 For the research proposal, an experiment application is created; the two-buttons app. With the two-buttons app, it was possible to experiment with various \testar settings. The application is shown in figures \ref{fig:exp-v1}, \ref{fig:exp-v2} and \ref{fig:exp-v3}. As one can observe, the differences between version 1 and version 2 are the added button with the label 'Hello v2' and between version 2 and 3 the buttons' colour and position. 
 
@@ -319,7 +319,6 @@ The chosen widget attributes explain the absence of changes between versions 2 a
 
 In section (\ref{research-questions}), the research questions are discussed. Of course, one of the questions will investigate how the change detection algorithm must be implemented. The findings of the two-button app should be considered, and the experiment should be adapted to contain different changes to test on. 
 
-%\newpage
 \subsection{\testar in containers}\label{sec:testar-in-docker}
 A recent master thesis by Slomp explains how \testar can be integrated into a \acrfull{ci} environment \cite{thesisSlomp}. Slomp introduced \testar into the world of Docker and container and integrated \testar into an Azure DevOps pipeline. A pipeline is a collection of steps that can automatically build, test and release software. A container bundles all the software, configuration files and libraries together so that an application can run \cite{ms-container}. 
 

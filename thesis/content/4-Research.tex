@@ -2,7 +2,15 @@
 In this chapter, the research questions for the thesis are formulated. What research method will be used, and how the questions are being validated.
 
 \section{Context}
-The graduation assignment evolves around change detection and visualising the changes. The result is an external application that connects to OrientDB and calculates and shows the changes. The external application will be built outside \testar. The code created by Pastor Ricós and by Mulders will be used as a starting point for the external application. 
+The graduation assignment evolves around change detection and visualising the comparison between version of the application under test. The result is an external application that connects to OrientDB and calculates and shows the model comparison. Figure \ref{fig:components-overview} shows the different components involved. The \textit{New Analysis Website} component is the component that is created. Section \ref{sec:components-explained} explained the different components in more detail.
+
+The external application is built as a separate application next to the \testar application. The code that was created by Pastor Ricós (Section \ref{sec:state-model-difference}) and Mulders (Section \ref{inferred-model}) are used as a starting point for the external application. 
+
+\begingroup
+\captionsetup{type=figure}
+\includegraphics[scale=0.4]{images/3-UML-high-level.png}
+\captionof{figure}{Components overview (UML 2.0)}\label{fig:components-overview}
+\endgroup
 
 Because change detection is the subject for this graduation assignment, it is assumed that the inferred model generator will generate useful models for change detection. Although the inferred model generator is out-of-scope, it is not ruled out that changes are necessary.
 
@@ -14,7 +22,11 @@ The main research question is: \textbf{How can an automated comparison of inferr
 
 The main research question is divided into three parts. The first part (\ref{rq:detect-changes}) will research how to detect changes between different versions of the same GUI software (SUT) \cite{testar-todo}. The second part (\ref{rq:diff-visualisation}) will research how to visualise the detected changes. A third Research Question \ref{rq:validation} is dedicated to validating the previous research questions. The research questions are as follows: 
 
+
 \begin{questions}
+
+    \item How can we set up the change detection as an application written outside of \testar? \label{rq:application-outside-testar}
+
     \item How to detect changes between two versions of the SUT? \label{rq:detect-changes}
     \begin{questions}
         \item What is change detection, and what do we want to use it for? \label{rq:what-is-change-detection}
@@ -23,6 +35,8 @@ The main research question is divided into three parts. The first part (\ref{rq:
         \item How can we find changes between two models? \label{rq:finding-changes}
     \end{questions}
 
+
+    
     \item How to visualise the detected differences to the user? \label{rq:diff-visualisation}
     \begin{questions}
         \item What tooling is available to show the result of the change detection? \label{rq:tooling}
@@ -37,6 +51,13 @@ The main research question is divided into three parts. The first part (\ref{rq:
     \end{questions}
 \end{questions}
 
+\subsection{\ref{rq:application-outside-testar}How can we set up the change detection as an application written outside of \testar?}
+\todo{write this section}
+extra things had to be done
+Industial standards
+F-Secure
+
+
 \subsection{\ref{rq:what-is-change-detection} What is change-detection, and what do we want to use it for?}
 To get an answer for \ref{rq:what-is-change-detection}, a literature study will be conducted. The literature study aims to bring an overview of change detection in general and its application in the \testar context. Not only change detection in the GUI but also other change detection methods in the field of Software Engineering, like cross-browser testing. 
 
@@ -46,10 +67,10 @@ The outcome of \ref{rq:useful-detection} is a list of requirements for the infer
 \subsection{\ref{rq:testar-config} Which \testar configuration will generate a useful model?}
 There are a couple of ways to change the outcome of an inferred model, for example, picking widget attributes for the hash calculation. These configurations can influence the usefulness of the model. The outcome of \ref{rq:useful-detection} should result in a \testar configuration file that configures \testar to generate this useful model. It might be necessary to make code changes in the state model generation or to the identification calculation to implement a Merkle tree approach. Using a Merkle tree could help with comparison to graphs, especially changed in the widget tree. 
 
-A threat of validity for \ref{rq:testar-config} is that every application under test needs its unique configuration. Therefore, it might be wise to look into all widgets attributes during the change detection and not take the hash of a state for the comparison. The configuration can be used for tuning the model and the change detection by taking the above approach.
+A threat of validity for \ref{rq:testar-config} is that every application under test needs its unique configuration. Therefore, it might be wise to look into all widget attributes during the change detection and not take the hash of a state for the comparison. The configuration can be used for tuning the model and the change detection by taking the above approach.
 
 \subsection{\ref{rq:finding-changes} How can we find changes between two models?}
-\ref{rq:finding-changes} is the closing question in which the algorithm is coded in Java. In a recent master thesis by Slomp \cite{thesisSlomp}, it is possible to run \testar in a Docker container. As a consequence, \testar can run without a GUI. Therefore the change detection algorithm will run in a separate application, outside the \testar context. The result of the change detection needs to be saved to a data store, preferably the already existing OrientDb database. 
+\ref{rq:finding-changes} is the closing question in which the change detection algorithm is coded in Java. In a recent master thesis by Slomp \cite{thesisSlomp}, it is possible to run \testar in a Docker container. As a consequence, \testar can run without a GUI. Therefore the change detection algorithm will run in a separate application, outside the \testar context. The result of the change detection needs to be saved to a data store, preferably the already existing OrientDb database. 
 
 \subsection{\ref{rq:tooling} What tooling is available to show the detected differences?}
 Aside from the inferred model, Mulders also created an application to visualise the models. It is essential to state that Mulders did extensive research on which technology fits his needs best. \ref{rq:tooling} will look at the results of Mulders and revalidate whether the libraries are suitable for visualising the differences. 

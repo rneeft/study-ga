@@ -1,5 +1,5 @@
 
-\section{\ref{rq:tooling} What tooling is available to show the detected differences?}
+\section{\ref{rq:application-outside-testar}How can we set up the change detection as an application written outside of \testar?} \label{sec:components-explained}
 The new application is written outside the \testar application. Doing so makes it possible to work without the context and dependencies of \testar and allows the application to be written in a language more known by the developer. The only dependency it has with \testar is the OrientDB graph database.
 
 Besides OrientDB, the solution is divided into two major parts. A \testar proxy, named .NET server, and a new \testar analysis website. As the name suggests, they are built and created in Framework from Microsoft: .NET Core (version 6) \footnote{\url{https://dot.net}}. .NET is an open-source, cross-platform framework. An application created with .NET will run on Windows, Linux and macOS. 
