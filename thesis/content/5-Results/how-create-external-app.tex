@@ -113,3 +113,14 @@ The new \testar Analysis website needs to be hosted on a web server that can hos
 The new \testar analysis website is publicly available on \url{https://app.testarin.net} (read as app dot \testar in dot net). The .NET server needs to be hosted on the network of the user. It needs to be able to access the OrientDB Server. 
 
 To help setting up the two components, two separate docker images are created. Both are available on the docker hub: \verb|rneeft/testar-net-server|\footnote{\url{https://hub.docker.com/repository/docker/rneeft/testar-net-server}} and \verb|rneeft/testar-net-ui|\footnote{\url{https://hub.docker.com/repository/docker/rneeft/testar-net-ui}}.
+
+\section{Architecture}
+
+\subsection{GraphService} \label{sec:the-graph-service}
+\todo{Explain the graph service including the JSON serialisation and that the generated structure can be read by the Cytoscape graph visualisation library.} 
+
+Retrieval of the graph data is being handled by two classes. The first class is the \verb|GraphService| and it makes the call to the server. It contains methods like, \verb|FetchAbstractLayerAsync| and \verb|FetchConcreteLayerAsync|. 
+
+\subsection{OrientDbCommand}
+
+\subsection{HttpClient}
