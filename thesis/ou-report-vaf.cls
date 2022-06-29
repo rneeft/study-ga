@@ -175,7 +175,6 @@
     \vspace*{2.6pt}%
 }
 
-
 \partfont{\color{ou-red}}
 
 \sectionfont{\color{ou-red}}
@@ -184,8 +183,6 @@
 
 \titleformat{\chapter}[display]{\normalfont\huge\bfseries\color{ou-red}}   {\chaptertitlename\ \thechapter}{20pt}{\Huge}
 \titlespacing{\chapter}{0pt}{-32pt}{1cm}
-
-
 
 %% Color the bullets of the itemize environment and make the symbol of the third
 %% level a diamond instead of an asterisk.

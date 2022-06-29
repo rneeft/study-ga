@@ -1,4 +1,4 @@
-\section{\ref{rq:finding-changes} How can we find changes between two models?}
+\section{\ref{rq:finding-changes} How can we find changes between two models?} \label{sec:finding-changes}
 
 \todo{This section must have an introduction}
 
@@ -87,9 +87,9 @@ When the algorithm finds corresponding states, it needs to compare the states to
             \State Mark $p$ as \textit{Removed} in old model
         \EndFor
         \For{$p \in$ $(O \cap N)$}
-            \State $Ov$ = value of element data in old model
-            \State $Nv$ = value of element data in new model
-            \If{$Ov \neq Nv$}
+            \State $O_v$ = value of element data in old model
+            \State $N_v$ = value of element data in new model
+            \If{$O_v \neq N_v$}
                \State Mark element data as changed 
             \EndIf
         \EndFor
