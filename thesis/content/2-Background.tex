@@ -1,11 +1,10 @@
-\chapter{Related Work}
+\chapter{Background} \label{background}
 
-%% TODO make better introduction for the chapter. 
+\todo{make better introduction for the chapter. }
 
-\section{Background} \label{background}
 This section describes the background of this proposal and contains information that is available but might not be known by students and readers. 
 
-\subsection{Introduction into GUI Testing}
+\section{Introduction into GUI Testing}
 Ever since the first line of software is written, testers are testing its workings. While in the early day of software, the \acrfull{ui} was mainly terminals based or a set of blinking LEDs \cite{altair8800} \footnote{For example the ALTAIR 8800 computer \cite{altair8800}}, today we have an ever-increasing amount of \acrfull{gui} applications. Testings a GUI application is labour intensive and costs a lot of money \cite{gui-history}.
 
 Initially, testers were using \acrfull{cr} software to automate their work. A tester would record a test scenario into the CR software, and then the CR software will execute the test case when needed. Using CR software, the time required to retest software decreases; however, the big downside is that when software changes, so must the recorded scripts \cite{gui-history}.
@@ -18,7 +17,7 @@ The static approach has several downsides. First, the source code must be availa
     
 As for the Dynamic approach, it captures the model during test execution. The automated test tool interacts with the SUT in a scriptless and random way. This random scriptless approach is called \emph{Monkey testing}. Usually, test monkeys have no idea in which state the SUT is in and what type of input is allowed. It is therefore essential to make the test monkey smarter. A "smart test monkey" can be achieved by making them "see" the UI elements (Section \ref{data-retrieval}). Section \ref{testar-testauto} will give more details about how \testar is using smart test monkeys.
 
-\subsection{What is \testar?} \label{what-is-testar}
+\section{What is \testar?} \label{what-is-testar}
 \testar - or TEST* - is an automated software testing tool for the GUI level \cite{testar-about}. \testar started within the context of the \acrfull{fittest} project. \testar is open-source, the source code is published on GitHub \footnote{ \url{https://github.com/testartool/testar\_dev}}. A screenshot of the \testar tool is displayed in Figure \ref{fig:testar}.
 
 \bigskip
@@ -44,7 +43,7 @@ In the \emph{Generate} mode, \testar will start testing the specified system. Se
 The \emph{Record} mode allows a tester to record a test sequence manually. In the \emph{Replay} mode, existing test execution can be re-executed and lastly, the \emph{View} mode allows existing test executions to be viewed.
 
 \newpage
-\subsubsection{TEST automation} \label{testar-testauto}
+\section{TEST automation} \label{testar-testauto}
 \testar works without test scripts. Instead, it uses GUI Ripping and Monkey testing techniques. \emph{GUI Ripping}, first introduced by Memon et al. \cite{gui-ripping}, is a process to obtain the GUI's structure and execution behaviour automatically. As for \emph{Monkey testing}, it is a process in which decisions (interactions with the GUI) are randomly made. Section \ref{data-retrieval} will give more insights into GUI Ripping.
 
 \testar is using a flow to execute tests on the SUT. This flow is as follows:
@@ -62,17 +61,16 @@ The \emph{Record} mode allows a tester to record a test sequence manually. In th
 \begingroup
 \captionsetup{type=figure}
 \includegraphics[scale=0.36]{images/testar-test-cycle.png}
-\captionof{figure}{\testar test cycle \cite{testar-presentation}}\label{fig:testar-test-cycle}
+\captionof{figure}{\testar test cycle \cite{VosAho2021}}\label{fig:testar-test-cycle}
 \endgroup
 
 Figure \ref{fig:testar-test-cycle} shows the flow graphically \cite{VosAho2021}. The test specialist needs to provide SUT details to \testar, like which actions should not be executed, and devise a mechanism that defines which SUT behaviour is correct and which is not, named a test oracle (Section \ref{test-oracles}). 
 
-\subsection{How is the SUT tested} \label{test-oracles}
+\section{How is the SUT tested} \label{test-oracles}
 When software is tested, a method is needed to check the correct behaviour of the SUT. The method of checking is formally known as a \emph{test oracle} \cite{testOracles}. 
 
-Outside the \testar context, an example of a test oracle could be a \emph{assertion} in software code. An assertion is a boolean expression created in a program by a software developer which checks the program's behaviour during run-time \cite{barr2014oracle}. Assertions can also be used in unit tests as displayed below on Listing \ref{code:assert}. 
+Outside the \testar context, an example of a test oracle could be an \emph{assertion} in software code. An assertion is a boolean expression created in a program by a software developer which checks the program's behaviour during run-time \cite{barr2014oracle}. Assertions can also be used in unit tests as displayed below on Listing \ref{code:assert}. 
 
-%% do not indent code since it indents its extra in the LaTeX output
 \begin{lstlisting}[language=Java, caption=Example assertion, label=code:assert]
 @Test
 public void testAdd(){
@@ -87,12 +85,12 @@ public void testAdd(){
 
 \testar comes with some test oracles out-of-the-box. Without any configuration, \testar will recognize crashes and unresponsiveness. It is also able to validate the GUI state with suspicious text. For example, a test sequence will fail when the title of a widget contains the word 'exception'. The input for the suspicious text is a regular expression that can be adjusted by the \testar user \cite{VosAho2021}. 
 
-\subsubsection{Online and Offline Test oracles}
+\subsection{Online and Offline Test oracles}
 Test oracles come in two variants, \emph{online} or \emph{on-the-fly} test oracles and \emph{offline} test oracles \cite{VosAho2021}. With online test oracles, the state under test is being asserted for any anomalies during test execution. For example,  an online test oracle inspects the URL to check for any information being exposed in the query string. Offline test oracles will look into stored data - like logs - to find anomalies after test execution. For example, offline test oracles can inspect all the visited URLs to check for any exposed information in the query strings.
 
 The two test oracle variants are complementary to each other and can run side by side. However, each variant comes with its strengths and weaknesses. The online test oracle takes up computation time because it inspects the state during test execution. This inspection of state slows down the test execution and may become an issue with time-critical SUTs. On the other hand, some issues - like the SUT becoming unresponsive - can only be checked during test execution. An offline test oracle is inspecting the gathered data after test execution has finished. Especially with larger data sets, this can become helpful. Inspecting the data may run in parallel, which can speed up the test oracle. Additionally, when developers create new offline test oracles, they can inspect the recorded data instead of executing a new test run \cite{de2019offline}.
 
-\subsection{How is data retrieved} \label{data-retrieval}
+\section{How is data retrieved} \label{data-retrieval}
 
 Section \ref{testar-testauto} discussed how \testar is using GUI ripping to obtain the GUI's structure. A GUI consists of a non-empty set of UI components, known as \emph{widgets}. Examples of widgets are Windows or buttons; more examples can be found in Table \ref{tables:widgets} \cite{VosAho2021}. 
 
@@ -129,13 +127,13 @@ The widgets are structured hierarchically in a \emph{widget tree}. Each node in 
 \captionof{figure}{A compact version of a widget tree for the calculator.}\label{fig:widget-tree}
 \endgroup
 
-\subsection{Widget data API}
+\section{Widget data API}
 
 In order to retrieve data from a SUT, \testar is making use of external APIs to access widgets that are part of the GUI \cite{thesisMulders}. \testar is using three different APIs.
 
 In order to test a desktop application, \testar makes use of the Windows Automation API. The purpose of the Windows Automation API is to expose rich information about UI elements\cite{win-api-info}. For web applications, \testar uses Selenium Chromedriver. The Chromedriver is a tool for automated testing. It provides capabilities for navigating through web pages, user input, and JavaScript execution \cite{chrome-driver-info}. The latest API that \testar is using is Appium. Appium is a test automation tool for native, mobile web, and hybrid applications on iOS mobile, Android mobile, and Windows platforms \cite{appium-info}.
 
-\subsection{GUI State} \label{gui-state}
+\section{GUI State} \label{gui-state}
 In the previous sections, the widget tree is discussed and how the widgets are retrieved. In the widget tree, all the GUI elements with their properties are captured. The widget tree represents the state of the GUI when it has stopped executing any action. The GUI is at 'rest'. When an action is executed, the GUI can change, going to a new state. In figure \ref{fig:state-actions} the state change is represented in a small graph. 
 \bigskip
 \begingroup
@@ -144,11 +142,11 @@ In the previous sections, the widget tree is discussed and how the widgets are r
 \captionof{figure}{An graph with two states and two actions.}\label{fig:state-actions}
 \endgroup
 
-The graph is a directed graph since every action changes the GUI from one state to the other. An action may lead to the same state, see figure \ref{fig:state-actions} action \textit{y}. However, that would mean that the action does not do anything or \testar does not indicate a change. For example, the GUI changes but not the property corresponding to the change is not included in the widget tree.
+The graph is a directed graph since every action changes the GUI from one state to the other. An action may lead to the same state, see figure \ref{fig:state-actions} action \textit{y}. However, that would mean that the action does not do anything or \testar does not indicate a change. For example, the GUI changes but the property corresponding to the change is not included in the widget tree.
 
 The universe of states and actions of the SUT's GUI makes up an inferred model. More information about the inferred model and how they are created can be found in section \ref{inferred-model}.
 
-\subsection{How is data persisted}
+\section{How is data persisted}
 
 \testar is using a database to store and retrieve state model data. Gier and Kager investigated which data storing solution would be beneficial to \testar \cite{GierKager}. The data solution must comply with six requirements. Generally speaking, the requirements were as follows: an open-source graph database with a straightforward query mechanism. The conclusion was that OrientDB was the best solution that met all the requirements.
 
@@ -175,11 +173,10 @@ Despite being a NoSQL database, OrientDB does support SQL as a query language \c
 
 In addition to \testar, other applications can query the state model data in the OrientDB database as well. For example, developers and students can create external tools for a single purpose, like a state model difference application. When building external tools, the \testar application can be kept small and focus upon one objective: testing GUI applications. 
 
-\section{Related work} \label{releatedWork}
-This section covers an overview of the material that is the direct foundation for this research proposal.
+\section{The Murphy tools} \label{murphy-tools}
 
+\todo{This section should go to chapter 3, leaving it here until comment is resolved}
 
-\subsection{The Murphy tools} \label{murphy-tools}
 F-Secure, a security software company, based in Finland, developed the Murphy tool \cite{aho2013industrial}. With the Murphy tool, it was possible to automatically extract models from the GUI and use them for GUI testing. The goal of the Murphy tool is to find as many states of a GUI as possible. Users can customise the Murphy scripts to direct the tool to particular cases. 
 
 Like \testar, Murphy creates a directed graph of the GUI under test. Each vertex of the graph is a state of the GUI represented by a screenshot of the GUI. Each edge is an action that the user could perform. 
@@ -188,9 +185,8 @@ Like \testar, Murphy is a platform-independent test tool. To accomplish that, Mu
 
 While Murphy is crawling the GUI it is making screenshots of the GUI. Besides that, the screenshots represent the state in the graph; they are used to detect changes between different versions of the SUT. 
 
-
-\subsection{Inferred model} \label{inferred-model}
-The master thesis by Mulders had two significant outcomes. The first is an inferred model module, and the second is the visualisation of the inferred models \cite{thesisMulders}. The visualisation model is a web-based application that shows the inferred model with screenshots and properties. Although the visualisation module becomes required when we want to visualise the result of the change-detection software, it is not necessary to go into depth in this document. This section will discuss what an inferred model is and how they are generated. 
+\section{Inferred model} \label{inferred-model}
+The master thesis by Mulders had two significant outcomes. The first is an inferred model module, and the second is the visualisation of the inferred models \cite{thesisMulders}. The visualisation module is a web-based application that shows the inferred model with screenshots and properties. Although the visualisation module will be required when we want to visualise the results of the change-detection software, it is not necessary to go into depth in this document. This section will discuss what an inferred model is and how they are generated. 
 
 The GUI state was discussed in section \ref{gui-state}. The section ended with the sentence that the universe of states and actions of the SUT's GUI makes up the inferred model. The inferred model is a directed graph showing the GUI-state of the application and the transactions between states. The vertex of the graph represents the GUI-state. Each vertex has a set of incoming and outgoing edges, called the actions. 
 
@@ -205,7 +201,7 @@ Figure \ref{fig:state-model} shows the result of the inferred model in the visua
 
 In figure \ref{fig:state-model} two models can be observed. The first model, indicated by the AS text, shows the abstract model. The second, indicated by the CS text, shows the concrete GUI states. 
 
-\subsubsection{Concrete model}
+\subsection{Concrete model}
 The concrete model contains all the data that could be retrieved from the GUI. The identification key uses a hash calculated over all the properties. Aside from the widget's properties, the concrete models also contain a screenshot of the GUI for each state \cite{thesisMulders}.
 
 Figure \ref{fig:concrete-node} shows an example of a node in the concrete model. Upon selecting a node, the properties of the node show, including the screenshot taken during the test. The grey dotted line, indicated with the letter 'a', shows the connection with the abstract node, see section \ref{abstract-model} and figure \ref{fig:abstract-model} for more details. The two outgoing edges, indicated with the letter 'b', shows the two actions available in this state. The incoming edge, indicated with the letter 'c', shows how the state was reached. 
@@ -218,8 +214,8 @@ Figure \ref{fig:concrete-node} shows an example of a node in the concrete model.
 \endgroup
 
 \newpage
-\subsubsection{Abstract model} \label{abstract-model}
-Since the concrete models containing all the data from a GUI-state, they can become quite large.  Therefore an abstraction model is made \cite{thesisMulders}. Figure \ref{fig:abstract-model} shows an example of such a abstract node. The grey lines (from CS-3, CS-6 to AS-3) indicates which concrete state is abstracted. The properties of the abstract node are displayed, what the identifier is and which concrete state(s) it represents.
+\subsection{Abstract model} \label{abstract-model}
+Since the concrete models contain all the data from a GUI-state, they can become quite large.  Therefore an abstract state model is made \cite{thesisMulders}. Figure \ref{fig:abstract-model} shows an example of such a abstract node. The grey lines (from CS-3, CS-6 to AS-3) indicates which concrete states are abstracted. The properties of the abstract node are displayed, what the identifier is and which concrete state(s) it represents.
 
 \bigskip
 \begingroup
@@ -228,7 +224,7 @@ Since the concrete models containing all the data from a GUI-state, they can bec
 \captionof{figure}{A node from the abstract model}\label{fig:abstract-model}
 \endgroup
 
-\subsubsection{State identifiers} \label{state-identifiers}
+\subsection{State identifiers} \label{state-identifiers}
 Every state must have a unique id for identification. The identifier is calculated with the data from the widget tree. 
 
 \testar uses a hashing algorithm that works as follows: the widgets' properties are concatenated and hashed. The outcome will be used as the identifier for a widget. The hashes from the widget in the widget tree are then combined and hashed to create an identifier for the GUI state \cite{VosAho2021}. The \testar's algorithm is similar to how a Merkle tree works, more information can be found at section \ref{merkle-tree}.
@@ -237,7 +233,7 @@ To identify the state (and actions), \testar calculates two state identifiers; a
 
 When running \testar, it is possible to configure which widget properties should be used for the abstract state identifier. Figure \ref{fig:advance} shows the selection dialogue in which the user can select the properties for the abstract identifier.
 
-\subsection{Merkle tree} \label{merkle-tree}
+\section{Merkle tree} \label{merkle-tree}
 A Merkle tree is a hash tree data structure where a hash can identify each vertex. \cite{merkle-tree} The cryptographic hash is calculated by taking the hashes of the descendant vertices, combining them, and calculating a new hash from the combination. 
 
 As written in the previous section (\ref{state-identifiers}), \testar's way of calculating the identification id for a widget or a GUI state is similar to that of the Merkle tree vertex. The hashed id for a widget is based on the hashed property values. Figure \ref{fig:merkle-tree} shows an example of a Merkle tree about how the GUI state identification id is calculated. The corresponding widget tree (Figure \ref{fig:widget-tree}), where the Merkle tree is based, is shown in the top right corner.
@@ -251,8 +247,8 @@ Although a Merkle tree usually is a binary tree \cite{merkle-tree}, having more 
 \captionof{figure}{An short Merkle tree example based on a widget tree}\label{fig:merkle-tree}
 \endgroup
 
-\subsubsection{How is an inferred model created?}
-This research focuses itself on the outcome of the obtain step as illustrated in figure \ref{fig:obtain-state-graph}, which is the top right part of figure \ref{fig:testar-test-cycle}.
+\subsection{How is an inferred model created?}
+This research focuses itself on the outcome of the obtain state step as illustrated in figure \ref{fig:obtain-state-graph}, which is the top right part of figure \ref{fig:testar-test-cycle}.
 
 \bigskip
 \begingroup
@@ -263,9 +259,9 @@ This research focuses itself on the outcome of the obtain step as illustrated in
 
 Generating the inferred model starts when \testar start testing the SUT. After an action has been executed successfully, the state of the GUI is sent to the inferred model module. When the state is reached without action, it is marked as the initial state. 
 
-The inferred model module generates the abstract and concrete state's and saves those in the model. The model is persisted in the OrientDb database. At last, a deterministic model check is being performed and saved \cite{testar-code}.
+The inferred model module generates the abstract and concrete states and saves those in the model. The model is persisted in the OrientDb database. At last, a deterministic model check is being performed and saved \cite{testar-code}.
 
-\subsection{State model difference}
+\section{State model difference} \label{sec:state-model-difference}
 The \verb|StateModel.Difference| package, added by Pastor Ricós\cite{stateDiff}, offers a proof of concept for calculating differences between the inferred state models. For the comparison, the \verb|abstractStateId| is used. 
 
 Pastor Ricós difference algorithm\cite{stateDiff} outputs two classification of changes between two models: added and removed state. Let $A$ be a set of \verb|abstractStateId|s of version 1 of the SUT, and let $B$ be a set of \verb|abstractStateId|s of version 2 of the SUT. The removed states can be written as
@@ -282,7 +278,7 @@ the states that are added can be written as
 Using the \verb|abstractStateId| is excellent for the proof of concept and preliminary change detection, 
 However, its boolean nature in which state exists or not can result in many 'false' changes. For example, when a widget is moved, the change detection should result in an altered state, not a removed and added state. 
 
-Section \ref{state-identifiers} discussed how identifiers are generated, since the differences are calculated based on the \verb|abstractStateId| selecting the correct widget attributes is vital. Choosing too few attributes could result in conflicting differences like the same actions are removed and added. Choosing too many attributes could trigger a change in even the tiniest detail. Choosing the widget attributes can be done with the 'Advance' screen under the State model tab. See Figure \ref{fig:advance}.
+Section \ref{state-identifiers} discussed how identifiers are generated, since the differences are calculated based on the \verb|abstractStateId| selecting the correct widget attributes is vital. Choosing too few attributes could result in conflicting differences like the same actions are removed and added. Choosing too many attributes could trigger a change in even the tiniest detail. Choosing the widget attributes can be done with the 'Advanced' screen under the State model tab. See Figure \ref{fig:advance}.
 
 For the research proposal, an experiment application is created; the two-buttons app. With the two-buttons app, it was possible to experiment with various \testar settings. The application is shown in figures \ref{fig:exp-v1}, \ref{fig:exp-v2} and \ref{fig:exp-v3}. As one can observe, the differences between version 1 and version 2 are the added button with the label 'Hello v2' and between version 2 and 3 the buttons' colour and position. 
 
@@ -319,8 +315,7 @@ The chosen widget attributes explain the absence of changes between versions 2 a
 
 In section (\ref{research-questions}), the research questions are discussed. Of course, one of the questions will investigate how the change detection algorithm must be implemented. The findings of the two-button app should be considered, and the experiment should be adapted to contain different changes to test on. 
 
-%\newpage
-\subsection{\testar in containers}\label{sec:testar-in-docker}
+\section{\testar in containers}\label{sec:testar-in-docker}
 A recent master thesis by Slomp explains how \testar can be integrated into a \acrfull{ci} environment \cite{thesisSlomp}. Slomp introduced \testar into the world of Docker and container and integrated \testar into an Azure DevOps pipeline. A pipeline is a collection of steps that can automatically build, test and release software. A container bundles all the software, configuration files and libraries together so that an application can run \cite{ms-container}. 
 
 When \testar is being run within the Azure DevOps pipeline, the \testar GUI is not shown. Running \testar is not a problem. However, to analyse the outcome of \testar, the users need to install \testar and have access to the OrientDb database location. 

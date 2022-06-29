@@ -1,12 +1,12 @@
 
-\section{\ref{rq:tooling} What tooling is available to show the detected differences?}
+\section{\ref{rq:application-outside-testar}How can we set up the change detection as an application written outside of \testar?} \label{sec:components-explained}
 The new application is written outside the \testar application. Doing so makes it possible to work without the context and dependencies of \testar and allows the application to be written in a language more known by the developer. The only dependency it has with \testar is the OrientDB graph database.
 
 Besides OrientDB, the solution is divided into two major parts. A \testar proxy, named .NET server, and a new \testar analysis website. As the name suggests, they are built and created in Framework from Microsoft: .NET Core (version 6) \footnote{\url{https://dot.net}}. .NET is an open-source, cross-platform framework. An application created with .NET will run on Windows, Linux and macOS. 
 
 \begingroup
 \captionsetup{type=figure}
-\includegraphics[scale=0.7]{thesis/images/server-ui-comp.png}
+\includegraphics[scale=0.7]{images/server-ui-comp.png}
 \captionof{figure}{.NET UI - Server and OrientDb component model (UML 2.0)}\label{fig:components}
 \endgroup
 
@@ -48,7 +48,7 @@ With the \testar application, it is possible to open an analysis website \cite{t
 
 \begingroup
 \captionsetup{type=figure}
-\includegraphics[scale=0.4]{thesis/images/ui-home-page.png}
+\includegraphics[scale=0.4]{images/ui-home-page.png}
 \captionof{figure}{Available models in the new \testar website}\label{fig:ui-home-page}
 \endgroup
 
@@ -58,7 +58,7 @@ The code required to display the state graph, as shown in figure \ref{fig:graph-
 
 \begingroup
 \captionsetup{type=figure}
-\includegraphics[scale=0.3]{thesis/images/graph-page.png}
+\includegraphics[scale=0.3]{images/graph-page.png}
 \captionof{figure}{The new Graph page}\label{fig:graph-page}
 \endgroup
 
@@ -69,7 +69,7 @@ Before the user can use the \testar analysis website, it must authenticate itsel
 
 \begingroup
 \captionsetup{type=figure}
-\includegraphics[scale=0.4]{thesis/images/authentication-sd.png}
+\includegraphics[scale=0.4]{images/authentication-sd.png}
 \captionof{figure}{Authentication sequence (UML 2.0)}\label{fig:auth-sd}
 \endgroup
 
@@ -113,3 +113,14 @@ The new \testar Analysis website needs to be hosted on a web server that can hos
 The new \testar analysis website is publicly available on \url{https://app.testarin.net} (read as app dot \testar in dot net). The .NET server needs to be hosted on the network of the user. It needs to be able to access the OrientDB Server. 
 
 To help setting up the two components, two separate docker images are created. Both are available on the docker hub: \verb|rneeft/testar-net-server|\footnote{\url{https://hub.docker.com/repository/docker/rneeft/testar-net-server}} and \verb|rneeft/testar-net-ui|\footnote{\url{https://hub.docker.com/repository/docker/rneeft/testar-net-ui}}.
+
+\section{Architecture}
+
+\subsection{GraphService} \label{sec:the-graph-service}
+\todo{Explain the graph service including the JSON serialisation and that the generated structure can be read by the Cytoscape graph visualisation library.} 
+
+Retrieval of the graph data is being handled by two classes. The first class is the \verb|GraphService| and it makes the call to the server. It contains methods like, \verb|FetchAbstractLayerAsync| and \verb|FetchConcreteLayerAsync|. 
+
+\subsection{OrientDbCommand}
+
+\subsection{HttpClient}

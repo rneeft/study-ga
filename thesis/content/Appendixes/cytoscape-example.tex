@@ -1,0 +1,76 @@
+\chapter{Cytoscape example}
+
+\begin{lstlisting}[language=html, caption=Graph representation in JSON, label=code:cytoscape-example]
+<html>
+    <head>
+        <title>TESTAR Cytoscape Example</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.5.2/cytoscape.min.js"></script>
+        <style>
+            #cy {
+                width: 100%;
+                height: 100%;
+                position: absolute;
+                top: 0px;
+                left: 0px;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="cy"></div>
+        <script>
+            var cy = cytoscape({
+              container: document.getElementById('cy'),
+              style: [
+                {
+                    selector: '.AbstractAction',
+                    style: {
+                        'line-color': '#1c9099',
+                        'target-arrow-color': '#1c9099',
+                        'label': 'data(id)'
+                    }
+                },
+                {
+                    selector: '.AbstractState',
+                    style: {
+                        'background-color': '#1c9099',
+                        'label': 'data(id)'
+                    }
+                },
+              ],
+              elements: 
+              [
+                {
+                    "group": "nodes",
+                    "data": {
+                      "id": "n100" 
+                    },
+                    "classes":[
+                        "AbstractState"
+                    ]
+                },
+                {
+                    "group": "nodes",
+                    "data": {
+                        "id": "n101"
+                    },
+                    "classes":[
+                        "AbstractState"
+                    ]
+                },
+                {
+                    "group": "edges",
+                    "data": {
+                        "id":"e99",
+                        "target": "n100",
+                        "source": "n101"
+                    },
+                    "classes" :[
+                        "AbstractAction"
+                    ]
+                }
+              ]
+            });
+          </script>
+    </body>
+</html>
+\end{lstlisting}

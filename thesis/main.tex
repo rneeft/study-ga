@@ -6,6 +6,7 @@
 % Het template is versimpeld door Sylvia Stuurman, 2019.
 % Het template is aangepast voor de ba informatica door Harrie Passier, Tanja Vos en Pekka Aho 2020 
 % Het tamplate is aangepast met nieuwe huisstyle door Rick Neeft, 2021
+% TODO command toegevoegd, 2022
 
 \def\mytitle{How can automated comparison of inferred models help testers finding bugs?}
 \def\myauthor{Rick Neeft}
@@ -21,7 +22,7 @@
 
     % Elements of the thesis
     \input{front-cover}
-    
+
     % Page 2 must be left blank
     \myemptypage
     
@@ -49,23 +50,30 @@
     \input{content/1-Introduction}
     \newpage
     
-    \input{content/2-Related-Work}
+    \input{content/2-Background}
+    \newpage
+    
+    \input{content/3-Related-Work}
     \newpage
 
-    \input{content/3-Research}
+    \input{content/4-Research}
     \newpage    
     
-    \input{content/4-Results/main}
+    \input{content/5-Results/main}
     \newpage    
     
     % Reference list
     % keep using the alpha style, this makes it easier for the reader to correlate the used citations
-    \bibliographystyle{alpha}
+    \bibliographystyle{abbrv}
     \bibliography{bibliography}
+    \newpage
     
     % List of abbreviations
     
     
     % Appendices
+    \appendix
+    \input{content/Appendixes/main}
+
 
 \end{document}

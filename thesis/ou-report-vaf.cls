@@ -7,6 +7,8 @@
 \ProcessOptions\relax
 \LoadClass[12pt]{report}
 \usepackage{afterpage}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
 \RequirePackage{amsmath}
 \RequirePackage{amssymb}
 \RequirePackage[nooneline,footnotesize]{caption}
@@ -173,7 +175,6 @@
     \vspace*{2.6pt}%
 }
 
-
 \partfont{\color{ou-red}}
 
 \sectionfont{\color{ou-red}}
@@ -182,7 +183,6 @@
 
 \titleformat{\chapter}[display]{\normalfont\huge\bfseries\color{ou-red}}   {\chaptertitlename\ \thechapter}{20pt}{\Huge}
 \titlespacing{\chapter}{0pt}{-32pt}{1cm}
-
 
 %% Color the bullets of the itemize environment and make the symbol of the third
 %% level a diamond instead of an asterisk.
@@ -265,3 +265,14 @@
 \pretocmd{\section}{%
   \ifnum\value{section}=0 \else\clearpage\fi
 }{}{}
+
+%% creates a command todo. It:
+%% - add a warning in the output to keep track of the todo's
+%% - displays the text in the document. 
+\newcommand{\todo}[1]{
+    \@latex@warning{TODO "#1"} 
+    \textit{
+        \textcolor{ou-red}{\textbf{TODO}:}
+             #1
+    }
+}
