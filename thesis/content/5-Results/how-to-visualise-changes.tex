@@ -5,36 +5,22 @@ In this section the visualisation of the change detection results are discussed.
 
 \subsection{How are graphs visualised} \label{sec:graph-visualisation}
 
+The visualisation of graphs in the new analysis tool is being drawn by Cytoscape.js\footnote{https://js.cytoscape.org/}. "Cytoscape.js is an open-source graph theory (a.k.a. network) library written in JS [JavaScript]" \cite{cytoscape-js}. The cytoscape.js library was used by the build in analysis website of \testar made by Mulder \cite{thesisMulders} and was migrated to the new Analysis website. The Java code that was used to convert the data from OrientDb to a Cytoscape.js acceptable format has been refactored and moved to the new C\# code.
+
 All the information about a model and graph is stored in OrientDB. The new Analysis website is retrieving the model and graph data through the \testar .NET server from the OrientDB database. This communication is done by the \verb|GraphEngine|. The \verb|GraphEngine| contains a method for each layer it, for example: \verb|FetchAbstractLayerAsync|. Edges between layers are retrieved with a different method, for example: \verb|FetchAbstractConcreteConnectors| which retrieves the edges between a abstract and concrete state. By splitting up the method for each layer it becomes possible to only retrieve the information that is needed. As an example, the graph shown for an application, like in figure \ref{fig:graph-page}, needs to have all the information while the detection algorithm only needs the abstract information. 
 
-The \verb|GraphEngine| is returning the information as a list of \verb|GraphElement|'s. Each graph element contains all the data about either a node, an edge or a compound object. A compound object is served as a parent in which other element can be visualised. An example of a compound layer can be found in figure .... \todo{Add picture with a compound layer} and is used to group nodes together.  
+The \verb|GraphEngine| is retrieving the data from each layer and transforms them into a internal model. A UML class diagram of the internal model can be viewed in figure \ref{fig:class-diagram-models} (the \verb|AppGraph| does not play a role in the displaying the graph). When the transformation from the OrientDB database to graph elements is completed the engine returns them in a list structure. 
 
-The list is serialised into a JSON format structure. An example of the serialisation result can be viewed in listing \ref{code:graph-json}. The data contains an array of elements each having three attributes: \verb|group|, \verb|data| and \verb|classes|. The group is either contains the value nodes or edges, representing their graph element. The attribute \verb|data| contains the \verb|id| of the element and all the additional data about the vertex/edge. For an edge that data also contains the target and source id, specifying the id of a vertex. The element classes is similar as classes in \textsc{CSS} and can be used to style the elements in the GUI. 
-
-The result of listing \ref{code:graph-json} generates the graph visible in figure \ref{fig:graph-example} \todo{Add footnote with live example and reference the appendix for the code.}
+Beside the vertexes and edges, the \verb|GraphEngine| can also include a compound object. A compound object grouped graphs objects together. Figure \ref{fig:compound-example} shows such a compound layer which groups the concrete states together into a 'ConcreteLayer'. The new Analysis website has an options, in the settings page, to enable the grouping of items into a compound layer.
 
 \begingroup
 \captionsetup{type=figure}
-\includegraphics[scale=0.6]{content/5-Results/Images/graph-example.png}
-\captionof{figure}{Example graph}\label{fig:graph-example}
+\includegraphics[scale=0.6]{content/5-Results/Images/compound-layer.png}
+\captionof{figure}{Compound object grouping concrete states together}\label{fig:compound-example}
 \endgroup
 
-data is loading from the server. \verb|GraphEngine| is used. Contains methods for each 
-all the elements are in a moved into a model format. The model is already shown in figure \ref{fig:class-diagram-models}. The class \verb|AppGraph| does not play a role in the displaying the graph. 
+After the list with \verb|GraphElement|'s is retrieved, it needs to be passed to the Cytoscape.js library in the form of JSON objects. Since the \verb|GraphElement| is created with the idea of JSON in mind, the serialisation to JSON is easy. An example of the serialisation result can be viewed in listing \ref{code:graph-json}. The data contains an array of elements each having three attributes: \verb|group|, \verb|data| and \verb|classes|. The group is either contains the value nodes or edges, representing their graph element. The attribute \verb|data| contains the \verb|id| of the element and all the additional data about the vertex/edge. For an edge that data also contains the target and source id, specifying the id of a vertex. The element classes is similar as classes in \textsc{CSS} and can be used to style the elements in the GUI. 
 
-The \verb|List| with \verb|GraphElement| are transformed into a JSON format. Listing \ref{code:graph-json} gives an example a graph in json format. 
-
-There are two groups, nodes and edgeds. 
-
-Crytoscape is used for the visualisation of the graph 
-explain graph input.. state and connectors 
-
-An graph is a combination of nodes and edges, this can be represented in
-
-e stands for edge
-n stands for node
-
-\newpage
 \begin{lstlisting}[language=xml, caption=Graph representation in JSON, label=code:graph-json]
 [
   {
@@ -69,30 +55,46 @@ n stands for node
 ]
 \end{lstlisting}
 
+The result of listing \ref{code:graph-json} generates the graph visible in figure \ref{fig:graph-example}. The full HTML code is added as appendix \ref{appendix:cytoscape-example}. 
+
+\begingroup
+\captionsetup{type=figure}
+\includegraphics[scale=0.6]{content/5-Results/Images/graph-example.png}
+\captionof{figure}{Example graph}\label{fig:graph-example}
+\endgroup
+
 \subsection{Merging the two graphs} \label{sec:merge-graph}
 
-put place of the GraphEngine here
+After the two models are compared by the change detection algorithm (section \ref{sec:change-detection-algorithm}) a graph can be created which contains both models and the changed detection results. The technique presented by Andrews et al. is used to merge two graphs into one merge graph. Andrews et al. describes an six steps approach in merging two graphs. The algorithm of merging will be explained below in the same six steps.
 
-within with items from $G_{old}$ then iterate though $G_{new}$ items
+\subsubsection{1. Read Two input Graphs}
 
+The two models and therefor the two graphs needs to be read. Section \ref{sec:graph-visualisation} explains how the graphs $G_{old}$ and $G_{new}$ are read.
 
-explain the graph input basics
-
-clean up of data from the change detection
-
-
-classes indicated how to show it in the UI
-Id = is the id of the node or edge
-source and target is used for edge to connect to a node in the UI
-rest of the data is data from \testar
-
-corresponding state only need to come from $G_{new}$ since those states contains the change detection result information. We though need to import all the other states from $G_{old}$ since thouse are the removed states. We find the removed states by looking which state does are missing the \verb|CD_CorrespondingId| element data. 
+\subsubsection{2. Find Matching Nodes}
+This step is handled by the change detection algorithm discussed in section \ref{sec:change-detection-algorithm}.
+Results are an enriched version of $G_{old}$ and $G_{new}$. 
 
 
-Andrews et al. show in \cite{andrews2009visual} how to graphs can be merged. They lay out six steps to two graphs are merged into a merge graph. 
+\subsubsection{3. Create Merge Graph}
+Andrews et al. uses the following algorithm to merge two graphs into a merge graph: "A merge graph $G_m$ is created by combining the two input graphs [$G_{old}$ and $G_{new}$] and considering the matches from $S_m$ [In our case $S_m$ does not exist, instead the corresponding ids between states is used to match nodes in the graph]. First all nodes and edges from $G_{new}$ are added to $G_m$. Then all non-matching nodes from $G_{old}$ are added to $G_m$. Finally all edges from $G_{old}$ are added to $G_m$ and wired. Edges which connect to matching nodes from $G_{old}$ have to be connected to the matching nodes from $G_{new}$." \cite{andrews2009visual}. \footnote{Andrews et al. used $G_1$ and $G_2$ to indicate their graphs, the names have been replaced with $G_{old}$ and $G_{new}$}
 
+The edges that were leading to nodes in $G_{old}$ nee to be rewired to nodes in $G_{new}$. To help with the rewiring process two in-memory dictionaries are used. The first dictionary contains the combination of $StateId_{old}$ with $NodeId_{new}$. The second dictionary contains the combinations of $NodeId_{old}$ with $StateId_{old}$. Using the two dictionaries a combination of the following can be made:
+\[ NodeId_{old} \rightarrow  StateId_{old} \rightarrow NodeId_{new}. \]
+Since the edges contains the Id of both the target and source node, using the two dictionaries the $NodeId_{old}$ can be rewired to $NodeId_{new}$.
 
-from the $G_n$ and $G_o$ the merge graph $G_m$ is created. 
-%% do not indent code since it indents its extra in the LaTeX output
+\subsubsection{4. Lay Out Merged Graph}
 
-to create a matching list, the corresponding states are first loading into a matrix 
+Laying out the merged graph is handled by the Cytoscape.js library as discussed in section \ref{sec:graph-visualisation}.
+
+\subsubsection{5. Propagate Changes to Original Graphs}
+
+The original graphs are not displayed in the compare results. Doing so would take up too much screen space, especially when the graphs can become very big. To provide the options to view the original graphs new classes are added to the merge graph. 
+
+First of all the nodes from $G_{new}$ are given the class 'NewVersion' and if they had a corresponding state the class 'OldVersion', since the matching nodes from $G_{old}$ are not added to the $G_m$. The same is done for all the edges in $G_{new}$. The non-matching nodes and all the edges in $G_{old}$ are given the class 'OldVersion'.
+
+By providing the 'NewVersion' and 'OldVersion' filtering can be applied by Cytoscape.js making it possible to toggle the view into the Old, New and Merge view. 
+
+\subsubsection{6. Manually Edit merged Graph}
+
+This section is not applicable to the New Analysis Website since it does not provide an options to manually set corresponding states in order to change the merged graph. 
