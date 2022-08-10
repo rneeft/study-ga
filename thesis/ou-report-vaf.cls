@@ -242,6 +242,16 @@
     tabsize=2
 }
 
+% Define Language RPG
+\lstdefinelanguage{Gherkin}
+{
+  % list of keywords
+  morekeywords={
+    Scenario, Given, And, When, Then, Feature, Background
+  },
+  keywordstyle=\color{ou-red}, % style of keywords
+}
+
 %% create style for research question list
 \newlist{questions}{enumerate}{2}
 \setlist[questions,1]{label=\textbf{RQ\arabic*},ref=RQ\arabic*}
