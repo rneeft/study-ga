@@ -77,3 +77,5 @@ In the merge graph are different shapes and colours visible. Red means a removed
 
 \subsubsection{Outcome}
 By running the scenario's one issue was found in the merge engine. In section \ref{sec:merge-graph} under how to merge the graph is explained that the edged (abstract actions in \testar case) must be rewired from the old graph to the new graph. This was done but also for the actions that were already in the merge graph (which has the same action Ids). The led to duplication of edges. This issue is fixed by keeping track of action id in the merge graph. When a edge from the old graph contain an action id in the list than it is not rewired.
+
+
