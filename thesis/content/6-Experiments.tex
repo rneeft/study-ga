@@ -1,28 +1,31 @@
 \chapter{Validation \& Experiments}
 
+In this chapter the validation of the algorithm is tested. This testing happens in three tests. Section \ref{sec:scenarios-testing} present the findings of a technical test in which test scenarios are designed to test the algorithm. It starts with setting up in memory graphs and assert the merge graph outcome. Section \ref{sec:experimental-application} shows the use of an external application the is tested by \testar. The external application is an experimental test application, in which it is possible to create three different versions. The last test is conducted using a real live application, tested by \testar. 
 
-using login because it is be able to sign in immediately 
-\begin{verbatim*}
-"C:\tools\chromedriver.exe" "1920x900+0+0" "http://localhost:8100/Login"
-\end{verbatim*}
+\todo{Create Last test}
 
-To prevent the system to logout it is needed to filter the logout action, \verb|.*Logout.*| added to the filter option. 
+% using login because it is be able to sign in immediately 
+%\begin{verbatim*}
+%"C:\tools\chromedriver.exe" "1920x900+0+0" "http://localhost:8100/Login"
+%\end{verbatim*}
 
-\begin{lstlisting}[language=Java, caption=Begin Sequence code, label=code:beginSequence]
-@Override
-protected void beginSequence(SUT system, State state) {
-	super.beginSequence(system, state);
+%To prevent the system to logout it is needed to filter the logout action, \verb|.*Logout.*| added to the filter option. 
 
-	waitLeftClickAndPasteIntoWidgetWithMatchingTag("id", "url", "http://localhost:5000", state, system, 5,1.0);
-	waitLeftClickAndTypeIntoWidgetWithMatchingTag("id","username", "testar2\\testar", state, system, 5,1.0);
-	waitLeftClickAndTypeIntoWidgetWithMatchingTag("id","password", "testar", state, system, 5,1.0);
-	waitAndLeftClickWidgetWithMatchingTag("name", "Sign In", state, system, 5, 1.0);
-}
-\end{lstlisting}
+%\begin{lstlisting}[language=Java, caption=Begin Sequence code, label=code:beginSequence]%
+%@Override
+%protected void beginSequence(SUT system, State state) {
+%	%super.beginSequence(system, state);
+
+%	waitLeftClickAndPasteIntoWidgetWithMatchingTag("id", "url", "http://localhost:5000", state, system, 5,1.0);
+%	waitLeftClickAndTypeIntoWidgetWithMatchingTag("id","username", "testar2\\testar", state, system, 5,1.0);
+%	waitLeftClickAndTypeIntoWidgetWithMatchingTag("id","password", "testar", state, system, 5,1.0);
+%	waitAndLeftClickWidgetWithMatchingTag("name", "Sign In", state, system, 5, 1.0);
+%}
+%\end{lstlisting}
 
 \newpage
 
-\section{Gherkin style testing}
+\section{Gherkin style testing} \lable{sec:scenarios-testing}
 The first form of validation the algorithm is done with Gherkin syntax testing. Gherkin is syntax that describes a test scenario. The syntax uses special keywords like \textbf{Given}, \textbf{When}, \textbf{Then} to describe a \textit{scenario}. An example of a Gherkin scenario can be found in listing \ref{code:gherkin-example}.
 
 \begin{lstlisting}[language=Gherkin, caption=Calculator test example, label=code:gherkin-example]
@@ -78,4 +81,8 @@ In the merge graph are different shapes and colours visible. Red means a removed
 \subsubsection{Outcome}
 By running the scenario's one issue was found in the merge engine. In section \ref{sec:merge-graph} under how to merge the graph is explained that the edged (abstract actions in \testar case) must be rewired from the old graph to the new graph. This was done but also for the actions that were already in the merge graph (which has the same action Ids). The led to duplication of edges. This issue is fixed by keeping track of action id in the merge graph. When a edge from the old graph contain an action id in the list than it is not rewired.
 
+\section{Experimental application} \label{sec:experimental-application}
+
+\subsection{The application}
+The application under test is an application created in .NET. The source code can be found in the companion GitHub repository \footnote{}
 
