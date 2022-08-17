@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace Experiment
 {
     public partial class Form1 : Form
     {
-        public Form1(string args)
+        public Form1(string[] args)
         {
             InitializeComponent();
 
@@ -14,22 +15,29 @@ namespace Experiment
             ButtonV2.Visible = false;
             ButtonV3.Visible = false;
 
-            if (args == "v1")
+            if (args.Any(x => x == "v1"))
             {
                 ButtonV1.Visible = true;
             }
 
-            if (args == "v2")
+            if (args.Any(x => x == "v2"))
             {
                 ButtonV1.Visible = true;
                 ButtonV2.Visible = true;
             }
 
-            if (args == "v3")
+            if (args.Any(x => x == "v3"))
             {
                 ButtonV1.Visible = false;
                 ButtonV2.Visible = true;
                 ButtonV3.Visible = true;
+            }
+
+            if (args.Any(x => x == "-nostart"))
+            {
+                PanelButtons.Visible = true;
+                ButtonStart.Visible = false;
+                ButtonBack.Visible = false;
             }
         }
 
