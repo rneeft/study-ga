@@ -1,0 +1,28 @@
+{
+  "profiles": {
+    "Experiment v1": {
+      "commandName": "Project",
+      "commandLineArgs": "v1"
+    },
+    "Experiment v2": {
+      "commandName": "Project",
+      "commandLineArgs": "v2"
+    },
+    "Experiment v3": {
+      "commandName": "Project",
+      "commandLineArgs": "v3"
+    },
+    "Experiment v1 nostart": {
+      "commandName": "Project",
+      "commandLineArgs": "v1 -nostart"
+    },
+    "Experiment v2 nostart": {
+      "commandName": "Project",
+      "commandLineArgs": "v2 -nostart"
+    },
+    "Experiment v3 nostart": {
+      "commandName": "Project",
+      "commandLineArgs": "v3 -nostart"
+    }
+  }
+}
