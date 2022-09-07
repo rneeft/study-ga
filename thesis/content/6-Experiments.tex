@@ -164,12 +164,10 @@ During technical testing an issue was fixed that made sure the merge graph conta
 The experiment application showed that this resulted in states without actions. This happened because some (unrelated) action has the same action id and was therefore not added. The code was changed to not only keep track of the id of the action, but also to include the target and source identifiers.  
 
 \subsubsection{Not clear what changed in a state}
-The screenshots or data inside a corresponding state could have changed but this was not clear in the details screen. To help showing possible differences between corresponding state, the details window will show screenshots of the two states. 
-
-In a future release it can be possible to create a pixel by pixel comparison but as of now this options was not implemented by out of the box libraries. \\
+The screenshots or data inside a corresponding state could have changed but this was not clear in the details screen. To help showing possible differences between corresponding state, the details window will show screenshots of the two states. Figure \ref{fig:screenshots-side-by-side} shows a screenshot of the tool with two application screenshot side by side. 
 
 \begingroup
 \captionsetup{type=figure}
-\includegraphics[scale=0.5]{images/6-Screenshot-Side-By-Side.png}
+\includegraphics[scale=0.6]{images/6-Screenshot-Side-By-Side.png}
 \captionof{figure}{Screenshot of corresponding states side by side}\label{fig:screenshots-side-by-side}
 \endgroup
