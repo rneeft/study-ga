@@ -1,8 +1,8 @@
 \section{\ref{rq:finding-changes} How can we find changes between two models?} \label{sec:finding-changes}
 
-\todo{This section must have an introduction}
+The core of this thesis is finding changes between two versions of an application. This section sets outs how changes are found in the application. In section \ref{rq:type-visualisation-answer} the comparison result is used to merge the two models into one \textit{merge graph}.
 
-Finding changes is handled in the \verb|Testar.ChangeDetection.Core.Algorithm| namespace. The new analysis website handles the visualisation of the differences and is discussed in section \ref{rq:type-visualisation-answer}. The classes used for the algorithm are visualised in figure \ref{fig:class-diagram-differences}. 
+Finding changes is handled in the \verb|Testar.ChangeDetection.Core.Algorithm| namespace.The classes used for the algorithm are visualised in figure \ref{fig:class-diagram-differences}. 
 
 \begingroup
 \captionsetup{type=figure}
@@ -11,7 +11,7 @@ Finding changes is handled in the \verb|Testar.ChangeDetection.Core.Algorithm| n
 \endgroup
 
 \subsection{The change detection algorithm} \label{sec:change-detection-algorithm}
-The algorithm will be explained in this sub-section, starting with a high-level overview. After the high-level overview, the different interfaces in figure \ref{fig:class-diagram-differences} are explained in more detail.
+This sub-section will explain the algorithm, starting with a high-level overview. After the high-level overview, the different interfaces in figure \ref{fig:class-diagram-differences} are explained in more detail.
 
 The concept of \textit{corresponding states} needs to be explained to understand the algorithm. Corresponding states mean that two states, in the new and the old model, are identified as the 'same' state but can have different data. There are a couple of ways to identify corresponding states. The first is by assumption, the second is inferred, and the last is by asking a third party (for example, a human input). For the developed algorithm, only the first two are used. 
 
@@ -26,7 +26,7 @@ Figure \ref{fig:compare-algorithm-start} gives an overview of the start of the a
 
 The next step is finding the starting states, indicated by step 1.3. Those will be the first corresponding states. The current version of the algorithm assumes that the initial states from both graphs are corresponding states. Those states could, for example, be a splash screen or a loading screen.
 
-The flow of the algorithm continues in figure \ref{fig:compare-algorithm-compare} with 1.5. in which the initial states are marked as corresponding states (Step 1.5.1). The rest of the progress follows a recursive pattern between two algorithm methods, the first being \verb|CompareAbstractStates| (Step 1.5) and \verb|CompareActions| (Step 1.5.5).
+The flow of the algorithm continues in figure \ref{fig:compare-algorithm-compare} with 1.5. The initial states are marked as corresponding states (Step 1.5.1). The rest of the progress follows a recursive pattern between two algorithm methods, the first being \verb|CompareAbstractStates| (Step 1.5) and \verb|CompareActions| (Step 1.5.5).
 
 The algorithm uses the abstract model to find high-level changes within the system under tests. As discussed in section \ref{abstract-model}, the concrete model contains all the information about states within the application under test, and the abstract model contains the abstracted data. Concrete states are abstracted into abstract states, and concrete actions are abstracted into abstract actions. As so, an abstract state contains one or more abstract actions, leading to another abstract state.
  
@@ -61,14 +61,12 @@ Given a \verb|Model|, which contains the application name and version, the data 
 \captionof{figure}{Class diagram Graph models (UML 2.0)}\label{fig:class-diagram-models}
 \endgroup
 
-The \verb|AppGraph| class, shown in figure \ref{fig:class-diagram-models}, is wrapper around a collection of \verb|GraphElement|'s. The \verb|GraphElement| is container a abstract Document which is either a Vertex or an Edge. The abstract \verb|Document| class contains the properties from the vertex or the Edge.
-
-%When the \verb|AppGraph| is serialised into JSON, it will generate the structure that can be read by the Cytoscape Graph visualisation library.
+The \verb|AppGraph| class, shown in figure \ref{fig:class-diagram-models}, is wrapper around a collection of \verb|GraphElement|'s. The \verb|GraphElement| is a container of an abstract document for either a Vertex or an Edge. The abstract \verb|Document| class contains the properties from the vertex or the Edge.
 
 Although the data for each element is located as set of properties, the classes in figure \ref{fig:class-diagram-models} contains some helper properties, e.g. \verb|IsAbstractAction| and \verb|IsConcreteState| which returns a Boolean depending on the type name. 
 
 \subsubsection{IStartingAbstractState} \label{sec:starting-abstract-state}
-The interface \verb|IStartingAbstractState| is used to locate at which abstract state the algorithm must start comparing. The default implementation is given by the \verb|InitialStartingAbstractState|. As the class name suggests, this implementation is looking for the initial state. For the correct working of the algorithm, it is assumed that the initial states are corresponding states. For example, the initial states can be a splash or a loading screen.
+The interface \verb|IStartingAbstractState| is used to locate at which abstract state the algorithm must start comparing. The default implementation is given by the \verb|InitialStartingAbstractState|. As the class name suggests, this implementation looks for the initial state. For the correct working of the algorithm, it is assumed that the initial states are corresponding states. For example, the initial states can be a splash or a loading screen.
 
 \subsubsection{ICompareVertices} \label{sec:i-compare-vertices}
 When the algorithm finds corresponding states, it needs to compare the states together. This comparison is handled by the \verb|ICompareVertices| interface. A default implementation is provided by the \verb|CompareVertices| class. In algorithm \ref{alg:comparison-corresponding-states} is explained how the inner workings of the implementation are working.  
@@ -97,27 +95,8 @@ When the algorithm finds corresponding states, it needs to compare the states to
 \end{algorithm}
 
 All the findings of algorithm \ref{alg:comparison-corresponding-states} are saved as element data with the prefix \verb|CD_| (for Change Detection) so that the visualisation can find them easily. Moreover, changed element data is prefixed with \verb|CD_CO_| or \verb|CD_CN_| (respectively CO standing for Changed Old value and CN for Changed New value), and new data elements are prefixed with \verb|CD_A_| (A for added) and removed data elements are prefixed with \verb|CD_R_| (R for removed).
-
+\newpage
 \subsubsection{ICompareGraph} \label{sec:compare-algorithm}
-At the start of this section (\ref{sec:change-detection-algorithm}) an high level overview is given concerning the change detection algorithm. The algorithm is implemented by in the \verb|GraphCompareEngine| class and is using the above mentioned inteffaces as dependencies. The \verb|Compare| method is given 
+A high-level overview of the change detection algorithm is given at the start of this section (\ref{sec:change-detection-algorithm}). The algorithm is implemented in the \verb|GraphCompareEngine| class and uses the aforementioned interfaces as dependencies. The \verb|Compare| method is given 
 
-A limitation of change detection is that the object, in this case, the old and new version of an application, needs to be similar enough to enable the detection of changes in the first place \cite{andrews2009visual}. To verify whether the requirement of similarity is met, the used abstract attributes of the two versions are compared, and when different abstract attributes are used, the comparison process is cancelled \cite{stateDiff}. 
-
-%Abstract Graph comparison
-%First the software create a ComparableGraph. A Comparable graph only contacts the nodes and edges from the abstract states and abstract actions. The data however will include data from the concrete states and actions. 
-
-%When we have a changed abstract state, get a widget tree of one concrete state
-%https://www.xmlunit.org/  have a package for both java as .NET to create differences between version.
-
-%using a fast mode
-%the fast mode will only look into changes on the abstract level. Changes like different colours for example
-
-
-% Every element has an ID generated by OrientDb e.g. #154:0. When merging elements those Id's are merged to by the following algorithm: \#Id1\_Id2 e.g. \#150:0\_\#150:1. 
-
-%difference engine
-%merge graph \cite{andrews2009visual}
-%the graph needs to be similar are "enough"
-
-%Finding matching notes is done by the difference algorithm. 
-
+A limitation of change detection is that the object, in this case, the old and new version of an application, needs to be similar enough to enable the detection of changes in the first place \cite{andrews2009visual}. To verify whether the similarity requirement is met, the used abstract attributes of the two versions are compared, and when different abstract attributes are used, the comparison process is cancelled \cite{stateDiff}. 

@@ -2,6 +2,23 @@
 
 \todo{make better introduction for related work. }
 
+\subsection{What is a change?} \label{sec:what-is-change}
+
+Not many research papers could be found that define the word change. A clear definition of the word \textit{change} is found in a psychology paper by Rensink \cite{rensink2002change}.
+
+\begin{quote}
+    "The word change generally refers to a transformation or modification of something over time. As such, this notion presumes a nonchanging substrate on which changes are imposed. More precisely, change is defined here [the paper] as the transformation over time of a well-defined, enduring structure." (Rensink, 2002, p. 248).
+\end{quote}
+
+The definition of the word change can be translated to the language of \testar. The "well-defined, enduring structure" refers to the GUI of the system under test, whereas the "transformation over time" refers to the various version of the SUT. The "something" refers to a part of the GUI that can change like: Widget tree, the state or an action. 
+
+Besides defining the word change, Rensink also describes the differences between changes and differences. A change is a transformation of the same 'something', whether a difference lacks the property of the same something. For example, what are the differences between two distinct SUT, or the same SUT but in two distinct environments or Internet Browsers? A limit to the change detection algorithm is that the SUT needs to be executed in the same environment; otherwise, false-positive changes can occur.
+
+This distinction of definitions between change and differences give the first limit to this research paper's proposed change detection algorithm. The change detection algorithm will give the changes of a SUT, between versions, in the same environment since a different environment can influence the model and therefore influence the outcome of the change detection.
+
+\subsection{What change detection?}
+
+
 \section{detecting changed by model comp} 
 
 model 

@@ -42,7 +42,6 @@ In the \emph{Generate} mode, \testar will start testing the specified system. Se
 
 The \emph{Record} mode allows a tester to record a test sequence manually. In the \emph{Replay} mode, existing test execution can be re-executed and lastly, the \emph{View} mode allows existing test executions to be viewed.
 
-\newpage
 \section{TEST automation} \label{testar-testauto}
 \testar works without test scripts. Instead, it uses GUI Ripping and Monkey testing techniques. \emph{GUI Ripping}, first introduced by Memon et al. \cite{gui-ripping}, is a process to obtain the GUI's structure and execution behaviour automatically. As for \emph{Monkey testing}, it is a process in which decisions (interactions with the GUI) are randomly made. Section \ref{data-retrieval} will give more insights into GUI Ripping.
 
@@ -135,10 +134,11 @@ In order to test a desktop application, \testar makes use of the Windows Automat
 
 \section{GUI State} \label{gui-state}
 In the previous sections, the widget tree is discussed and how the widgets are retrieved. In the widget tree, all the GUI elements with their properties are captured. The widget tree represents the state of the GUI when it has stopped executing any action. The GUI is at 'rest'. When an action is executed, the GUI can change, going to a new state. In figure \ref{fig:state-actions} the state change is represented in a small graph. 
+
 \bigskip
 \begingroup
 \captionsetup{type=figure}
-\includegraphics{images/state-action.png}
+\includegraphics[scale=0.5]{images/state-action.png}
 \captionof{figure}{An graph with two states and two actions.}\label{fig:state-actions}
 \endgroup
 
@@ -233,20 +233,6 @@ To identify the state (and actions), \testar calculates two state identifiers; a
 
 When running \testar, it is possible to configure which widget properties should be used for the abstract state identifier. Figure \ref{fig:advance} shows the selection dialogue in which the user can select the properties for the abstract identifier.
 
-\section{Merkle tree} \label{merkle-tree}
-A Merkle tree is a hash tree data structure where a hash can identify each vertex. \cite{merkle-tree} The cryptographic hash is calculated by taking the hashes of the descendant vertices, combining them, and calculating a new hash from the combination. 
-
-As written in the previous section (\ref{state-identifiers}), \testar's way of calculating the identification id for a widget or a GUI state is similar to that of the Merkle tree vertex. The hashed id for a widget is based on the hashed property values. Figure \ref{fig:merkle-tree} shows an example of a Merkle tree about how the GUI state identification id is calculated. The corresponding widget tree (Figure \ref{fig:widget-tree}), where the Merkle tree is based, is shown in the top right corner.
-
-Although a Merkle tree usually is a binary tree \cite{merkle-tree}, having more than two descendant vertices is not considered a problem since the same Merkle-tree principle can be applied.
-
-\bigskip
-\begingroup
-\captionsetup{type=figure}
-\includegraphics[scale=0.8]{images/merkle-tree-example.png}
-\captionof{figure}{An short Merkle tree example based on a widget tree}\label{fig:merkle-tree}
-\endgroup
-
 \subsection{How is an inferred model created?}
 This research focuses itself on the outcome of the obtain state step as illustrated in figure \ref{fig:obtain-state-graph}, which is the top right part of figure \ref{fig:testar-test-cycle}.
 
@@ -323,3 +309,20 @@ When \testar is being run within the Azure DevOps pipeline, the \testar GUI is n
 By moving the code for change detection and visualisation into a stand-alone web application, the user can analyse the outcome on their browser. Since \testar is wrapped into a container, the stand-alone tool will also be wrapped to provide the same infrastructure. Nevertheless, it is up to the IT administrator how they deploy the \testar suite. 
 
 Additionally, to the user's benefit, a \testar developer can also benefit from the application's separation. Changes to either the separate application or \testar can be made without being conflicting with the other. Each tool can focus on one goal, while \testar can focus on testing GUI applications. 
+
+% \section{Merkle tree} \label{merkle-tree}
+% A Merkle tree is a hash tree data structure where a hash can identify each vertex. \cite{merkle-tree} The cryptographic hash is calculated by taking the hashes of the descendant vertices, combining them, and calculating a new hash from the combination. 
+% 
+% As written in the previous section (\ref{state-identifiers}), \testar's way of calculating the identification id for a widget or a GUI state is similar to that of the Merkle tree vertex. The hashed id for a widget is based on the hashed property values. Figure \ref{fig:merkle-tree} shows an example of a Merkle tree about how the GUI state identification id is calculated. The corresponding widget tree (Figure \ref{fig:widget-tree}), where the Merkle tree is based, is shown in the top right corner.
+% 
+% Although a Merkle tree usually is a binary tree \cite{merkle-tree}, having more than two descendant vertices is not considered a problem since the same Merkle-tree principle can be applied.
+% 
+% \bigskip
+% \begingroup
+% \captionsetup{type=figure}
+% \includegraphics[scale=0.8]{images/merkle-tree-example.png}
+% \captionof{figure}{An short Merkle tree example based on a widget tree}\label{fig:merkle-tree}
+% \endgroup
+% 
+% \todo{This picture is also very blurry, maybe we do not need this section anyway}
+
