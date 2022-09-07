@@ -142,7 +142,7 @@ In the previous sections, the widget tree is discussed and how the widgets are r
 \captionof{figure}{An graph with two states and two actions.}\label{fig:state-actions}
 \endgroup
 
-The graph is a directed graph since every action changes the GUI from one state to the other. An action may lead to the same state, see figure \ref{fig:state-actions} action \textit{y}. However, that would mean that the action does not do anything or \testar does not indicate a change. For example, the GUI changes but the property corresponding to the change is not included in the widget tree.
+The graph is a directed graph since every action changes the GUI from one state to the other. An action may lead to the same state, see figure \ref{fig:state-actions} action \textit{y}. However, that would mean that the action does not do anything or \testar does not indicate a change.
 
 The universe of states and actions of the SUT's GUI makes up an inferred model. More information about the inferred model and how they are created can be found in section \ref{inferred-model}.
 
@@ -172,18 +172,6 @@ The last model is the \hypertarget{db:object}{\emph{object}} that supports inher
 Despite being a NoSQL database, OrientDB does support SQL as a query language \cite{sql-lang} albeit that it does not support all SQL statements. The majority of developers have experience with SQL \cite{sql-stats}, and as a result, new developers and students can start querying the \testar data and start expanding its features.\par
 
 In addition to \testar, other applications can query the state model data in the OrientDB database as well. For example, developers and students can create external tools for a single purpose, like a state model difference application. When building external tools, the \testar application can be kept small and focus upon one objective: testing GUI applications. 
-
-\section{The Murphy tools} \label{murphy-tools}
-
-\todo{This section should go to chapter 3, leaving it here until comment is resolved}
-
-F-Secure, a security software company, based in Finland, developed the Murphy tool \cite{aho2013industrial}. With the Murphy tool, it was possible to automatically extract models from the GUI and use them for GUI testing. The goal of the Murphy tool is to find as many states of a GUI as possible. Users can customise the Murphy scripts to direct the tool to particular cases. 
-
-Like \testar, Murphy creates a directed graph of the GUI under test. Each vertex of the graph is a state of the GUI represented by a screenshot of the GUI. Each edge is an action that the user could perform. 
-
-Like \testar, Murphy is a platform-independent test tool. To accomplish that, Murphy uses various drivers. A driver recognises elements and windows of the GUI under test. One of the drivers uses the 'tab' key to enumerate UI elements. 
-
-While Murphy is crawling the GUI it is making screenshots of the GUI. Besides that, the screenshots represent the state in the graph; they are used to detect changes between different versions of the SUT. 
 
 \section{Inferred model} \label{inferred-model}
 The master thesis by Mulders had two significant outcomes. The first is an inferred model module, and the second is the visualisation of the inferred models \cite{thesisMulders}. The visualisation module is a web-based application that shows the inferred model with screenshots and properties. Although the visualisation module will be required when we want to visualise the results of the change-detection software, it is not necessary to go into depth in this document. This section will discuss what an inferred model is and how they are generated. 

@@ -23,8 +23,17 @@ This distinction of definitions between change and differences give the first li
 
 model 
 
-\subsection{Murphy tools}
-\todo{After comment resolvement, move Murphy tool from background to this chapter}
+\section{The Murphy tools} \label{sec:murphy-tools}
+
+F-Secure, a security software company, based in Finland, developed the Murphy tool \cite{aho2013industrial}. With the Murphy tool, it was possible to automatically extract models from the GUI and use them for GUI testing. The goal of the Murphy tool is to find as many states of a GUI as possible. Users can customise the Murphy scripts to direct the tool to particular cases. 
+
+Like \testar, Murphy creates a directed graph of the GUI under test, however they utilise difference approaches in how they create the graph. \testar is a platform-independent but still need platform-dependent api's (Windows Automation API for Windows application, Chromedriver for website) to "read" what is displayed on the screen. Murphy on the other hand is a multi-platform tool since it does not need platform-dependent api's but used screenshots to create the graph.
+
+To "read" the GUI Murphy uses various \emph{drivers}.  A driver recognises elements and windows of the GUI under test. One of the drivers uses the 'tab' key to enumerate UI elements. 
+
+While Murphy is crawling the GUI it is making screenshots of the GUI. Besides that, the screenshots represent the state in the graph; they are used to detect changes between different versions of the SUT. 
+
+
 
 GUI driver 
 
