@@ -1,8 +1,29 @@
-\chapter{Discussion}
+\chapter{Discussion and future work}
+In this thesis we presented an algorithm for change detection and visiualising them in web application. 
 
 
-In most cases, it is good to add a Discussion (either a section or a
-separate chapter). Try to be very honest in discussing the limitations
-and weaknesses of your work. In the discussion, you make a
-connection between the results and the literature and between the
-results and the research questions.
+
+The solution in this there is a first approach to apply change detection on inferred model. The code is setup in a way that allows for different implementations, for example in which state the algorithm should start. 
+
+the use of a different programming environment and language might attract different researched who are not that into the Java stack.
+
+In order to make the algorithm work, the models needs to reach a certain similarity \cite{andrews2009visual}. When the GUI has change too much between consequentic versions, the change detection algorithm find too many changes. For example, moving actions to non-corresponding changes may result in new and removed changes. 
+
+The concrete model need to be abstracted in a way that enables change detection. For example we changed the abstraction to ignore the parent state in the calculation of the action identifiers. Since \testar only generated one abstract layer for each GUI it could generate the abstraction useless for another purpose.
+
+
+
+\section{Future work} \label{sec:future-work}
+
+more work is needed. The application give feedback on what has changed, but there is not an option to provide feedback whether a change is expected or not. An feature to generated test cases based on the algorithm outcome is also missing. 
+
+
+Witin corresponding states execute UI differences.
+
+Saving the the results back to the database so the comparison doesn't have to be updated.
+
+using widget trees for more comparison.
+
+.net changes.
+Blazor improvements. 
+other analysis possibility can be implemented. 

@@ -13,7 +13,7 @@ Finding changes is handled in the \verb|Testar.ChangeDetection.Core.Algorithm| n
 \subsection{The change detection algorithm} \label{sec:change-detection-algorithm}
 This sub-section will explain the algorithm, starting with a high-level overview. After the high-level overview, the different interfaces in figure \ref{fig:class-diagram-differences} are explained in more detail.
 
-The concept of \textit{corresponding states} needs to be explained to understand the algorithm. Corresponding states mean that two states, in the new and the old model, are identified as the 'same' state but can have different data. There are a couple of ways to identify corresponding states. The first is by assumption, the second is inferred, and the last is by asking a third party (for example, a human input). For the developed algorithm, only the first two are used. 
+The concept of \textit{corresponding states} needs to be explained to understand the algorithm. Corresponding states mean that two states, in the new and the old model, are identified as the 'same' state but can have updated GUI. There are a couple of ways to identify corresponding states. The first is by assumption, the second is inferred, and the last is by asking a third party (for example, a human input). For the developed algorithm, only the first two are used. 
 
 Figure \ref{fig:compare-algorithm-start} gives an overview of the start of the algorithm. The \verb|GraphCompareEngine| starts with retrieving the graph data for the old and the new model. This step is indicated by step 1.1. Step 1.2 follows identical actions as 1.1 and is therefore omitted from the diagram.
 \newpage

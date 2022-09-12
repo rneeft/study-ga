@@ -1,8 +1,7 @@
 \chapter{Related work}
 
-\todo{make better introduction for related work. }
-
-\subsection{What is a change?} \label{sec:what-is-change}
+This chapter covers published research on model abstraction and change detection. Section \ref{sec:what-is-change} will give an definition on what change (detection) is and section \ref{sec:change-detection-research} discusses other approaches of dynamic analysis and change detection. 
+\section{What is a change \& change detection?} \label{sec:what-is-change}
 
 Not many research papers could be found that define the word change. A clear definition of the word \textit{change} is found in a psychology paper by Rensink \cite{rensink2002change}.
 
@@ -10,44 +9,37 @@ Not many research papers could be found that define the word change. A clear def
     "The word change generally refers to a transformation or modification of something over time. As such, this notion presumes a nonchanging substrate on which changes are imposed. More precisely, change is defined here [the paper] as the transformation over time of a well-defined, enduring structure." (Rensink, 2002, p. 248).
 \end{quote}
 
-The definition of the word change can be translated to the language of \testar. The "well-defined, enduring structure" refers to the GUI of the system under test, whereas the "transformation over time" refers to the various version of the SUT. The "something" refers to a part of the GUI that can change like: Widget tree, the state or an action. 
+The definition of the word change can be translated to the context of \testar. The "well-defined, enduring structure" refers to the GUI of the system under test, whereas the "transformation over time" refers to the various version of that SUT. The "something" refers to a part of the GUI that can change, like: Widget tree, a state or actions. 
 
-Besides defining the word change, Rensink also describes the differences between changes and differences. A change is a transformation of the same 'something', whether a difference lacks the property of the same something. For example, what are the differences between two distinct SUT, or the same SUT but in two distinct environments or Internet Browsers? A limit to the change detection algorithm is that the SUT needs to be executed in the same environment; otherwise, false-positive changes can occur.
+Besides defining the word change, Rensink also describes the differences between changes and differences. A change is a transformation of the same 'something', whether a difference lacks the property of the same something. For example, what are the differences between two distinct SUT or the same SUT but in two distinct environments or Internet Browsers?
 
-This distinction of definitions between change and differences give the first limit to this research paper's proposed change detection algorithm. The change detection algorithm will give the changes of a SUT, between versions, in the same environment since a different environment can influence the model and therefore influence the outcome of the change detection.
+\section{Change detection in previously published research} \label{sec:change-detection-research}
 
-\subsection{What change detection?}
+In theory, executing rudimentary change detection with capture \& replay (CR) application is possible. With CR, the tester works with the application under test to record test cases. The tester can replay their recorded test case in a consequent application version. If the test cases pass, that part of the application under test is not changed. If the test cases fail, something has changed. 
 
+Despite using existing test cases being an easy way to ensure the AUT still has the same behaviour as in an earlier version, using them cannot be used to find new features. It is, of course, impossible to record new features in previous versions. Many applications adopted the use of generated test cases to find an early form of change detection \cite{aho2019automated}. Three of the those tools are discussed in sections \ref{sec:guitar}, \ref{sec:guitam} and \ref{sec:gui-driver}.
 
-\section{detecting changed by model comp} 
+The section \ref{sec:murphy-tool} discusses the Murphy tool, which uses a state-of-the-art approach in which two consequent applications are modelled, and the two models are compared to find changes \cite{aho2019automated}.
 
-model 
+\subsection{Guitar (Bao N. Nguyen, Bryan Robbins, Ishan Banerjee \& Atif Memon)} \label{sec:guitar}
 
-\section{The Murphy tools} \label{sec:murphy-tools}
+\emph{Guitar} \cite{nguyen2014guitar} is a suite of tools, each having a distinct purpose. The ripper tool is responsible for generating a model based on the GUI of the AUT, named GUI Tree. The GUI Tree contains all the widgets and properties for each GUI window. The output of the ripper is used by the Graph Converter that converts the GUI Tree into an Event-Flow Graph (EFG). The EFG is used by the Test Case Generator tool to create executable test cases, which the Replayer tool uses on the AUT. With a plugin for the replayer, it can be used as a monitor tool to record the AUT behaviour and compare it with a previously recorded state to report changes.
 
-F-Secure, a security software company, based in Finland, developed the Murphy tool \cite{aho2013industrial}. With the Murphy tool, it was possible to automatically extract models from the GUI and use them for GUI testing. The goal of the Murphy tool is to find as many states of a GUI as possible. Users can customise the Murphy scripts to direct the tool to particular cases. 
+\subsection{GuiTam (Yuan Miao \& Xuebing Yang)} \label{sec:guitam}
+\emph{GuiTam} \cite{miao2010fsm} (GUI Test Automation Model) is a finite state machine (FSM) based on the GUI. By traversing all the states in FSM, test cases can be generated. The test cases are executed on a modified version of the AUT. During test execution, state information of the new version can be reflected in the old version of the application. When differences are found, they may reflect defects. 
 
-Like \testar, Murphy creates a directed graph of the GUI under test, however they utilise difference approaches in how they create the graph. \testar is a platform-independent but still need platform-dependent api's (Windows Automation API for Windows application, Chromedriver for website) to "read" what is displayed on the screen. Murphy on the other hand is a multi-platform tool since it does not need platform-dependent api's but used screenshots to create the graph.
+\subsection{GUI Driver (Pekka Aho, Nadja Menz, Tomi Räty \& Ina Schieferdecker)}  \label{sec:gui-driver}
+\emph{GUI Driver} \cite{aho2011automated} creates a model using the structure tree nodes of the GUI components and their properties. An MBT application \cite{mbt-tigris-org} outside of GUI Drivers creates test cases based on the models. GUI Drivers use the output of the MBT application to execute test cases. During test execution, GUI Driver compares the state of the old version with the current version to determine whether the expected state is reached. A report is generated with the results of the test run. 
 
-To "read" the GUI Murphy uses various \emph{drivers}.  A driver recognises elements and windows of the GUI under test. One of the drivers uses the 'tab' key to enumerate UI elements. 
+\subsection{Murphy tool (F-Secure)} \label{sec:murphy-tool}
 
-While Murphy is crawling the GUI it is making screenshots of the GUI. Besides that, the screenshots represent the state in the graph; they are used to detect changes between different versions of the SUT. 
+F-Secure, a security software company based in Finland, developed a tool named Murphy \cite{aho2013industrial}. With Murphy, it is possible to automatically extract models from the GUI and use them for GUI testing. The goal of the Murphy tool is to find as many states (nodes) of a GUI as possible. Users can customise the Murphy scripts to direct the tool to particular cases. 
 
+Like \testar, Murphy is analysing the GUI as if it is a user. A directed graph of the GUI with its state is created during the analysis. Even though \testar and Murphy are creating a graph about the GUI, the method of "reading" the GUI is different.
 
+\testar is platform-independent but still needs platform-dependent APIs (e.g. Windows Automation API for Windows application, Chromedriver for website) to read what is displayed on the screen. On the other hand, Murphy is a multi-platform tool since it does not need platform-dependent APIs but uses screenshots to create the graph \cite{aho2013industrial}.
 
-GUI driver 
+To read the GUI, Murphy uses various \emph{drivers}. A driver recognises elements and windows of the GUI under test. One of the drivers uses the 'tab' key to enumerate UI elements. 
 
-Reference testing GUITAR creates model of current version -> generate test cases... when TC fails -> test failure. 
-new features are not failing test cases. 
-
-Browser comparison -> ??
-
-How to compare graphs and visualise them. 
-
-Change visualisation
-
-no much research has been done finding changed in inferred mdoels. There is however a research field that come close to what the research is try to achive, namely cross browser testen. Insted of finding changes between two versions of the same application, with cross browser testing it tries to find differences of the same version but on different browsers.
-
-
-
+Murphy is integrated into the continuous integration system, and new models of the application are automatically captured. After capturing the new models are compared with the models already in the system. Each detected change was reported as a warning in the Web UI of Murphy, where a test engineer could classify the change as expected or unexpected. 
 

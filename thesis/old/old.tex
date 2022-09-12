@@ -1,0 +1,59 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\section{Murphy tool} \label{sec:murphy-tool}
+F-Secure, a security software company, based in Finland, developed a tool named Murphy \cite{aho2013industrial}. With Murphy , it is possible to automatically extract models from the GUI and use them for GUI testing. The goal of the Murphy tool is to find as many states (nodes) of a GUI as possible. Users can customise the Murphy scripts to direct the tool to particular cases. 
+
+Like \testar, Murphy is analysing the GUI as if it is a user. During the analysis it is created a directed graph of the GUI with its state. Even though \testar and Murphy are creating a graph about the GUI, the way of "reading" the GUI is different 
+
+Like \testar, Murphy creates a directed graph of the GUI under test, however they utilise difference approaches in how they create the graph. \testar is a platform-independent but still need platform-dependent api's (Windows Automation API for Windows application, Chromedriver for website) to "read" what is displayed on the screen. Murphy on the other hand is a multi-platform tool since it does not need platform-dependent api's but used screenshots to create the graph. \cite{aho2013industrial}
+
+To "read" the GUI Murphy uses various \emph{drivers}.  A driver recognises elements and windows of the GUI under test. One of the drivers uses the 'tab' key to enumerate UI elements. 
+
+While Murphy is crawling the GUI it is making screenshots of the GUI. Besides that, the screenshots represent the state in the graph; they are used to detect changes between different versions of the SUT. 
+
+murphy has way of detecting changes between two .
+provided a web interface to display the change to the user which they can indicated it was desired or not. 
+ 
+
+
+
+GUI driver 
+
+Reference testing GUITAR creates model of current version -> generate test cases... when TC fails -> test failure. 
+new features are not failing test cases. 
+
+Browser comparison -> ??
+
+How to compare graphs and visualise them. 
+
+Change visualisation
+
+
+no much research has been done finding changed in inferred mdoels. There is however a research field that come close to what the research is try to achive, namely cross browser testen. Insted of finding changes between two versions of the same application, with cross browser testing it tries to find differences of the same version but on different browsers.
+
+like murphy cross browser testing is done by comparing image and not create an inferred model. If they did, one could argue that the models do not change but it is the browser that interups the model in a different way. 
+
+
+
+
+between consequent versions. It is not a requirement to use consequent version, but doing so give a small change space. 
+
+
+A limit to the change detection algorithm is that the SUT needs to be executed in the same environment; otherwise, false-positive changes can occur.
+
+This distinction of definitions between change and differences give the first limit to this research paper's proposed change detection algorithm. The change detection algorithm will give the changes of a SUT, between versions, in the same environment since a different environment can influence the model and therefore influence the outcome of the change detection.
