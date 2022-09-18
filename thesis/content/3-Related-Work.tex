@@ -15,7 +15,7 @@ Besides defining the word change, Rensink also describes the differences between
 
 \section{Change detection in previously published research} \label{sec:change-detection-research}
 
-In theory, executing rudimentary change detection with capture \& replay (CR) application is possible. With CR, the tester works with the application under test to record test cases. The tester can replay their recorded test case in a consequent application version. If the test cases pass, that part of the application under test is not changed. If the test cases fail, something has changed. 
+In theory, executing rudimentary change detection with capture \& replay (CR) application is possible. With CR, the tester works with the application under test to record test cases. The tester can replay their recorded test case in a next version of the application. If the test cases pass, that part of the application under test is not changed. If the test cases fail, something has changed. 
 
 Despite using existing test cases being an easy way to ensure the AUT still has the same behaviour as in an earlier version, using them cannot be used to find new features. It is, of course, impossible to record new features in previous versions. Many applications adopted the use of generated test cases to find an early form of change detection \cite{aho2019automated}. Three of the those tools are discussed in sections \ref{sec:guitar}, \ref{sec:guitam} and \ref{sec:gui-driver}.
 

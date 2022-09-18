@@ -215,7 +215,7 @@ Since the concrete models contain all the data from a GUI-state, they can become
 \subsection{State identifiers} \label{state-identifiers}
 Every state must have a unique id for identification. The identifier is calculated with the data from the widget tree. 
 
-\testar uses a hashing algorithm that works as follows: the widgets' properties are concatenated and hashed. The outcome will be used as the identifier for a widget. The hashes from the widget in the widget tree are then combined and hashed to create an identifier for the GUI state \cite{VosAho2021}. The \testar's algorithm is similar to how a Merkle tree works, more information can be found at section \ref{merkle-tree}.
+\testar uses a hashing algorithm that works as follows: the widgets' properties are concatenated and hashed. The outcome will be used as the identifier for a widget. The hashes from the widget in the widget tree are then combined and hashed to create an identifier for the GUI state \cite{VosAho2021}.
 
 To identify the state (and actions), \testar calculates two state identifiers; an abstract and concrete state identifier. For the concrete state identifier, all the properties of a widget are used. For the abstract identifier, a subset of the properties is used. It is configurable which properties are used for the abstract identifier. By default the properties \textit{role}, \textit{title}, \textit{position} and \textit{enabled} are utilised \cite{VosAho2021, thesisMulders}.
 

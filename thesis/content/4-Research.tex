@@ -1,10 +1,10 @@
 \chapter{Research} \label{questions}
-In this chapter, the research questions for the thesis are formulated. What research method will be used, and how the questions are being validated.
+In this chapter, the research questions for the thesis are formulated. What research method will be used, and how the questions be validated.
 
 \section{Context}
-The graduation assignment evolves around change detection and visualising the comparison between version of the application under test. The result is an external application that connects to OrientDB and calculates and shows the model comparison. Figure \ref{fig:components-overview} shows the different components involved. The \textit{New Analysis Website} component is the component that is created. Section \ref{sec:components-explained} explained the different components in more detail.
+This thesis revolves around change detection and visualising the comparison between two consequent versions of the application under test. The result is an external application that connects to OrientDB and calculates and shows the model comparison. Figure \ref{fig:components-overview} shows the different components involved. The \textit{New Analysis Website} component is the component that is created. Section \ref{sec:components-explained} explained the different components in more detail.
 
-The external application is built as a separate application next to the \testar application. The code that was created by Pastor Ricós (Section \ref{sec:state-model-difference}) and Mulders (Section \ref{inferred-model}) are used as a starting point for the external application. 
+The external application is built as a separate application next to the \testar application. The code that Pastor Ricós created (Section \ref{sec:state-model-difference}) and Mulders (Section \ref{inferred-model}) is used as a starting point for the external application. 
 
 \begingroup
 \captionsetup{type=figure}
@@ -12,79 +12,39 @@ The external application is built as a separate application next to the \testar 
 \captionof{figure}{Components overview (UML 2.0)}\label{fig:components-overview}
 \endgroup
 
-Because change detection is the subject for this graduation assignment, it is assumed that the inferred model generator will generate useful models for change detection. Although the inferred model generator is out-of-scope, it is not ruled out that changes are necessary.
-
-Any automatic learning capabilities are also out-of-scope. A change detection learning capability could be a topic for a future research proposal. Regarding this research proposal, a human will be needed to evaluate the results and outcome of the change detection application.
+Because change detection is the subject of this graduation assignment, it is assumed that the inferred model generator will generate useful models for change detection. Although the inferred model generator is out-of-scope, it is not ruled out that changes are necessary.
 
 \section{Research questions} \label{research-questions}
-        
-The main research question is: \textbf{How can an automated comparison of inferred models help testers finding bugs?}
 
-The main research question is divided into three parts. The first part (\ref{rq:detect-changes}) will research how to detect changes between different versions of the same GUI software (SUT) \cite{testar-todo}. The second part (\ref{rq:diff-visualisation}) will research how to visualise the detected changes. A third Research Question \ref{rq:validation} is dedicated to validating the previous research questions. The research questions are as follows: 
+The main research question is: \textbf{How can we automate change detection on inferred \testar models?}
 
+The main research question is divided into three parts. The first part (\ref{rq:application-outside-testar}) will research how to set up an application outside \testar and how to deploy the application. The second part (\ref{rq:how-making-change-detection-algorithm}) will research how to implement a change detection algorithm. The last (\ref{rq:how-to-visualise-result}) will research how to visualise the detected changes. 
 
 \begin{questions}
 
-    \item How can we set up the change detection as an application written outside of \testar? \label{rq:application-outside-testar}
+    \item How can the new Analysis Website be set up outside of \testar? \label{rq:application-outside-testar}
 
-    \item How to detect changes between two versions of the SUT? \label{rq:detect-changes}
-    \begin{questions}
-        \item What is change detection, and what do we want to use it for? \label{rq:what-is-change-detection}
-        \item Which properties make a model useful for change detection? \label{rq:useful-detection}
-        \item Which \testar configuration will generate the useful model? \label{rq:testar-config}
-        \item How can we find changes between two models? \label{rq:finding-changes}
-    \end{questions}
-
-    \item How to visualise the detected differences to the user? \label{rq:diff-visualisation}
-    \begin{questions}
-        \item What tooling is available to show the result of the change detection? \label{rq:tooling}
-        \item How to visualise each change? \label{rq:type-visualisation}
-        \item How to generate the shortest set of actions that helps the user to reach the changed state in the SUT? \label{rq:shortest-set}    
-    \end{questions}
+    \item How to implement the change detection algorithm? \label{rq:how-making-change-detection-algorithm}
     
-    \item How to validate the results of \ref{rq:detect-changes} and \ref{rq:diff-visualisation}? \label{rq:validation}
-    \begin{questions}
-        \item What are the requirements for validation applications? \label{rq:req-apps}
-        \item Which applications can be used for validation? \label{rq:validation-apps}
-    \end{questions}
+    \item How to visualise the result of the change detection algorithm? \label{rq:how-to-visualise-result}
+
 \end{questions}
 
-\subsection{\ref{rq:application-outside-testar}How can we set up the change detection as an application written outside of \testar?}
-\todo{write this section}
-extra things had to be done
-Industial standards
-F-Secure
+\subsection{\ref{rq:application-outside-testar} How can we set up the change detection as an application written outside of \testar?}
 
+The outcome of \ref{rq:application-outside-testar} is a website that the testers can use to analyse the test results and execute the change detection algorithm. The current analysis website is embedded in the \testar tool. Since \testar can run inside a container during a continuous deployment \cite{thesisSlomp}. Even though testers do not need \testar to run tests on the GUI, they need to install \testar onto their computers to view the analysis website. 
 
-\subsection{\ref{rq:what-is-change-detection} What is change-detection, and what do we want to use it for?}
-To get an answer for \ref{rq:what-is-change-detection}, a literature study will be conducted. The literature study aims to bring an overview of change detection in general and its application in the \testar context. Not only change detection in the GUI but also other change detection methods in the field of Software Engineering, like cross-browser testing. 
+Additional work needs to be done to create the new analysis website. Industrial standards need to be implemented, including but not limited to web security, authentication to the web server, providing easy navigation and switching of orientDB databases. 
 
-\subsection{\ref{rq:useful-detection} Which properties make a model useful for change detection?}
-The outcome of \ref{rq:useful-detection} is a list of requirements for the inferred model that are needed to enable change detection. For example, can a non-deterministic state model be used? However, it also includes requirements for the algorithm, like, what are acceptable calculation speeds and how big can a state model be while still complying with the speed requirement? When the set of properties are known, Vaandrager's criteria are used to validate the model \cite{vaandrager}.
+The approach to creating the application outside of \testar will be conducted iteratively and incrementally in collaboration with the supervisors and F-Secure. During each weekly meeting, updates will be given, and feedback will be incorporated as soon as possible. 
 
-\subsection{\ref{rq:testar-config} Which \testar configuration will generate a useful model?}
-There are a couple of ways to change the outcome of an inferred model, for example, picking widget attributes for the hash calculation. These configurations can influence the usefulness of the model. The outcome of \ref{rq:useful-detection} should result in a \testar configuration file that configures \testar to generate this useful model. It might be necessary to make code changes in the state model generation or to the identification calculation to implement a Merkle tree approach. Using a Merkle tree could help with2 comparison to graphs, especially changed in the widget tree. 
+\subsection{\ref{rq:how-making-change-detection-algorithm} How to implement the change detection algorithm?}
 
-A threat of validity for \ref{rq:testar-config} is that every application under test needs its unique configuration. Therefore, it might be wise to look into all widget attributes during the change detection and not take the hash of a state for the comparison. The configuration can be used for tuning the model and the change detection by taking the above approach.
+The outcome of \ref{rq:how-making-change-detection-algorithm} is an implementation of change detection on the abstract layer of two versions of the GUI. The change detection algorithm will not be executed on the concrete layer since that layer can contain a 
+Especially since every change in the widget tree, like the button background, triggers a new state in the concrete layer. 
 
-\subsection{\ref{rq:finding-changes} How can we find changes between two models?}
-\ref{rq:finding-changes} is the closing question in which the change detection algorithm is coded in Java. In a recent master thesis by Slomp \cite{thesisSlomp}, it is possible to run \testar in a Docker container. As a consequence, \testar can run without a GUI. Therefore the change detection algorithm will run in a separate application, outside the \testar context. The result of the change detection needs to be saved to a data store, preferably the already existing OrientDb database. 
+The technical aspects of the change detection algorithm are validated with an experimental application. In a later stage, the algorithm is validated with research question \ref{rq:how-to-visualise-result} since it is hard to validate an algorithm without seeing the results. 
 
-\subsection{\ref{rq:tooling} What tooling is available to show the detected differences?}
-Aside from the inferred model, Mulders also created an application to visualise the models. It is essential to state that Mulders did extensive research on which technology fits his needs best. \ref{rq:tooling} will look at the results of Mulders and revalidate whether the libraries are suitable for visualising the differences. 
+\subsection{\ref{rq:how-to-visualise-result} How to visualise the result of the change detection algorithm?}
 
-\subsection{\ref{rq:type-visualisation} How to visualise change?}
-\ref{rq:type-visualisation} will look into the execution of the visualisation tool. How can added, removed or altered states in the inferred model be visualised the best? Like \ref{rq:finding-changes} this also includes moving the visualisation tool into its separate application, outside the \testar context. The requirements and GUI proposals will be discussed with the \testar stakeholders. 
-
-\subsection{\ref{rq:shortest-set} How to generate the shortest set of actions that helps the user to reach the changed state in the SUT?}
-One of the requirements of the visualisation is showing how to reach the state that has changed. Dijkstra's algorithm \cite{dijkstra1959note} is a well-known algorithm to find the shortest path for a given graph. However, as Goldberg and Harrelson \cite{goldberg2005computing} showed, it is not the most optimal shortest path algorithm, especially with massive graphs. 
-
-\subsection{\ref{rq:req-apps} What are the requirements for validation applications?}
-To validate the outcome of the change detection algorithm, we will need to have an application to test it on. The research question will create a set of requirements for the validation application, like multiple versions. The set will be discussed with the supervisors to make sure nothing will be forgotten.
-
-\subsection{\ref{rq:validation-apps} Which applications can be used for validation?}
-During development and system testing, the two-button app will be extended and used. Although the app is excellent during the development phase, it is nowhere close to a real-world application. Based on the outcome of \ref{rq:req-apps}, an application needs to be found in order to test the change detection algorithm.
-
-In addition to the application found, F-secure will be asked for feedback on the algorithm and the visualisation. F-Secure is a company based in Finland that provides security solutions to its customers and are currently testing the proof of concept of Pastor Ricós \cite{f-secure}.
-
-With the combination of real-world application and the feedback from F-Secure, biased towards a single point of view for the algorithm will be minimized. 
+After the change detection algorithm, the output must be displayed to the user. with \ref{rq:how-to-visualise-result} an research is conducted how to. Besides the research, the actual visualisation requirements will be discussed with the \testar stakeholders.
