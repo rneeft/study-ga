@@ -269,13 +269,6 @@
 
 \include{acronyms}
 
-%% makes sure every section starts on a new page except when the section is the first on a chapter.
-%% credits: https://tex.stackexchange.com/a/47049
-\usepackage{etoolbox}
-\pretocmd{\section}{%
-  \ifnum\value{section}=0 \else\clearpage\fi
-}{}{}
-
 %% creates a command todo. It:
 %% - add a warning in the output to keep track of the todo's
 %% - displays the text in the document. 

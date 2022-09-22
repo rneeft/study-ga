@@ -51,7 +51,7 @@ In the coming sections, the various interface and associated default implementat
 \endgroup
 
 \subsubsection{IRetrieveGraphForComparison}
-The \verb|IRetrieveGraphForComparison| interface is implemented by the \verb|GraphForCompareRetriever| and is responsible for retrieving the graph data from the server. It has a dependency on the GraphService (\ref{sec:the-graph-service}). 
+The \verb|IRetrieveGraphForComparison| interface is implemented by the \verb|GraphForCompareRetriever| and is responsible for retrieving the graph data from the server. It has a dependency on the GraphService, which is an class the provided methods to retrieve the raw data from the database. 
 
 Given a \verb|Model|, which contains the application name and version, the data from the abstract Layer, the concrete Layer and the abstract concrete connectors are retrieved. Only the data from the abstract layer is used for the comparison. The data from the concrete layer and the abstract concrete connectors are downloaded so that they can be used in the visualisation of the presentation of the graph (Discussed in more detail in \ref{rq:type-visualisation-answer}), likewise is the enrichment of the abstract actions with the description from the corresponding concrete actions.
 

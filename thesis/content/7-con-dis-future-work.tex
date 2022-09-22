@@ -1,0 +1,57 @@
+\chapter{Discussion and future work} \label{chapter:disussion-conclusion-future-work}
+This chapter will conclude this thesis by showing the study's key findings. It will answer the research questions, particularly the contribution to \testar, as well as the limitation of the study. This chapter will conclude with opportunities for further research. 
+
+\section{Contributions}
+There are two significate contributions to this thesis. The first is a new application that works outside and can be developed outside the \testar code bases. This application can be accessed through a web browser. Besides an installation by a system administrator, no additional installation is required on the computer of a test engineer. 
+
+\testar is created with the Java development stack. The new web application is created with the Microsoft development stack. This fact can tempt different students who are less familiar with Java but want to do their graduation assignment in Microsoft technologies. 
+
+The second significant contribution is the change detection algorithm. Previously \testar was only able to recognise removed features in a newer version of an application by replaying existing test sequences. With the contributions from this thesis, a new state-of-the-art change detection algorithm is created, which can find removed features and new features in a new version of an application. 
+
+The algorithm's outcome is displayed in a merge graph on the new analysis website. The test engineer can navigate the changes by following the execution flow from the initial state to the changed state.
+
+The algorithm works by traversing the new application's graph and comparing each action and state with a shadow traversal of the old graph. When an action is not found in the old version, the algorithm marks it as old. When an action is found, the algorithm follows the actions it graphs and marks the target state as corresponding states. If a change is detected in any outgoing actions in the corresponding states, then the algorithm marks the corresponding state as changed.
+
+\section{Limitations}
+This section will discuss some of the critical limitations of the outcome and how they can be overcome in future research. 
+
+\subsubsection{Abstract layer}
+The algorithm works with the abstract layer, but this layer needs to be altered to enable change detection. For example, the algorithm expects a model with deterministic actions id between versions of an application, but \testar always includes the parent state's identifier in the action id calculation. The parent state can change for various reasons; therefore, the action id also changes, and so does the algorithm's outcome. During experimentation, the calculation was adjusted to exclude the parent state identifier, which makes the abstract layer less useful for other applications or research.
+
+The application can be extended to include generating an abstract layer, specifically for the change detection algorithm. Generating its own abstract layer graph will not impact other applications or research, but it might help the change detection with a deterministic model between consecutive versions of a GUI. 
+
+\subsubsection{Initial state assumption}
+The algorithm assumes that the initial state is a corresponding state. With applications with different initial states, this assumption can be incorrect. This behaviour can be altered in a new algorithm version but is not implemented. 
+
+The application can be extended with a test engineer's option to specify the starting states. However, the developer must ensure the algorithm can traverse all the states in the new version. The algorithm cannot correlate when a state is chosen in which not all other states can be reached. Correspondingly, choosing the wrong state in the old version can result in an outcome that everything is new. 
+
+\subsubsection{Changes in state are action dependend}
+The algorithm evolves around actions that are removed or added. Consequently, the verdict on whether a corresponding state has changed is determined by comparing the actions in both versions. When they differ, the algorithm marks the state as changed. Changes within the state, like a change in the order of buttons, are not considered changes by the algorithm. 
+
+The application can be extended with a module that investigates corresponding states with an improved change detection algorithm. One can think about screenshot comparison, like in Murphy, or the comparison of the widget tree, or both. One factor to consider is that the abstract layer contains neither screenshots nor widget trees; therefore, those elements must be taken from the concrete layer, which contains one or more states per abstract state. 
+
+\subsubsection{Major changes in a newer version}
+The algorithm cannot handle significant changes accurately. Assume there is an updated application with parts of the application moved to a completely different location. The change detection algorithm will be able to find it, but it will show it as removed in the old version and completely new in the updated version despite showing it as moved. 
+
+To implement the options to recognise \textit{moved} the algorithm \textbf{and abstract layer} needs to be upgraded. The abstract layer must not only yield a deterministic action id between versions but also ensure that the generated action ids are unique in the abstract layer. The algorithm needs to be adjusted to recognise actions id in the overall graph. 
+ 
+\subsection{Various other future research}
+In the last section, the limitation and corresponding future research are discussed. This section enumerates various other research topics.
+
+\begin{enumerate}
+\item The result of the algorithm is not saved back into a database. Saving it back, or exporting it, might save time. 
+
+\item The algorithm does not know what the difference is between an expected and an unexpected change. A module could be created where the test engineer can rate the outcome. The algorithm can then learn what kind of changes the test engineer is looking for. 
+
+\item The new analysis website does not include the \testar reports generated during regular testing, nor that these reports saved in the database. An update to \testar and the website might provide this feature.
+
+\item The change detection algorithm cannot be started as an external application, for example, during a CI/CD pipeline execution. When the application can store data in the database, it might be helpful to update the \dotnet server to include the algorithm. 
+
+\end{enumerate}
+
+Other research can also be conducted that improves the useability of the application, provide a higher security level, creating a single application by merging the \dotnet server and UI. 
+
+\section{Closing statement}
+The research aimed to develop a change detection algorithm to find changes between two versions of an application. The outcome satisfied the aim by delivering an external application to analyse the application under test. The algorithm uses the application's abstract layer to specify removed, and new actions between two versions of an application and indicate when a state has been updated. 
+
+

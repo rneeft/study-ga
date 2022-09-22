@@ -1,6 +1,8 @@
-\chapter{Validation \& Experiments}
+\chapter{Validation \& Experiments} \label{chapter:validation-experiments}
 
-In this chapter, the validation of the algorithm is tested. This testing happens in three tests. Section \ref{sec:scenarios-testing} presents the findings of a technical test in which test scenarios are designed to test the algorithm. It starts with setting up in-memory graphs and asserting the outcome of the merge graph. Section \ref{sec:experimental-application} shows the use of an external application tested by \testar. The external application is an experimental test application in which it is possible to create three different versions. \todo{The last test is conducted using a real-life application, tested by \testar. }
+In this chapter, the validation of the algorithm is tested. This testing happens in three tests. Section \ref{sec:scenarios-testing} presents the findings of a technical test in which test scenarios are designed to test the algorithm. It starts with setting up in-memory graphs and asserting the outcome of the merge graph. Section \ref{sec:experimental-application} shows the use of an external application tested by \testar. The external application is an experimental test application in which it is possible to create three different versions.
+
+\todo{The last test is conducted using a real-life application, tested by \testar. }
 
 \section{Technical testing} \label{sec:scenarios-testing}
 The first form of algorithm validation is a technical test done with Gherkin syntax. \textit{Gherkin} is a syntax that describes a test scenario. The syntax uses special keywords like \textbf{Given}, \textbf{When}, \textbf{Then} to describe a \textit{scenario}. An example of a Gherkin scenario can be found in listing \ref{code:gherkin-example}.
@@ -32,8 +34,6 @@ A couple of scenarios are written to validate the algorithm and the merging of t
 \endgroup
 
 Each scenario follows the same pattern. The first two graphs from the background are chosen and set as either the old or new. Then the comparison is run, and the comparison result is merged. After the merge, the actual result is asserted with the validation described. Five scenarios are tested using this pattern, divided into four specific tests focusing on a specific qualification of a change. The fifth scenario is a more extensive test representing the experiment application discussed in the next section.
-
-\todo{Add more information about experiment}
 
 The four specific tests are as follows (1) validation that the initial states are recognised as corresponding states, (2) Going from a corresponding state, following action with the same id, validating that the target state is recognised as corresponding states, (3) When a new abstract state is added validate it is recognised and merge as such, (4) When an abstract state is removed in the new version validate it is recognised and merged as such.
 
@@ -164,7 +164,7 @@ During technical testing an issue was fixed that made sure the merge graph conta
 The experiment application showed that this resulted in states without actions. This happened because some (unrelated) action has the same action id and was therefore not added. The code was changed to not only keep track of the id of the action, but also to include the target and source identifiers.  
 
 \subsubsection{Not clear what changed in a state}
-The screenshots or data inside a corresponding state could have changed but this was not clear in the details screen. To help showing possible differences between corresponding state, the details window will show screenshots of the two states. Figure \ref{fig:screenshots-side-by-side} shows a screenshot of the tool with two application screenshot side by side. 
+The screenshots or data inside a corresponding state could have changed but this was not clear in the details screen. To help showing possible differences between corresponding state, the details window will show screenshots of the two states. Figure \ref{fig:screenshots-side-by-side} shows a screenshot of the tool with two application screenshot side by side.\\
 
 \begingroup
 \captionsetup{type=figure}

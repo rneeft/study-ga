@@ -11,13 +11,19 @@
 \def\mytitle{How can automated comparison of inferred models help testers finding bugs?}
 \def\myauthor{Rick Neeft}
 \def\myStudentId{851829973}
-\def\myPresentationDate{T.B.D. 2022}
+\def\myPresentationDate{T.B.D. October 2022}
+\def\rqApplicationOutsideTestar{How can the new Analysis Website be set up outside of \testar?}
+\def\rqHowMakingChangeDetectionAlgorithm{How to implement the change detection algorithm?}
+\def\rqHowToVisualiseResult{How to visualise the result of the change detection algorithm?}
+\def\rqMainQuestion{How can we automate change detection on inferred TESTAR models?}
 
 \newcommand{\testar}{\textsc{testar }}
 \newcommand{\testarnet}{\textsc{testar .NET }}
+\newcommand{\dotnet}{\textsc{.NET }}
 
 \begin{document}
 
+    % use roman numbers for the first section
     \pagenumbering{roman}
 
     % Elements of the thesis
@@ -31,20 +37,19 @@
     
     % Acknowledgements
     \input{content/A-Acknowledgements}
-    %\myemptypage
     
+    % Summary
+    \input{content/B-Summary}    
+
     % Table of contents
     \begingroup
         \hypersetup{linkcolor=black}
         \tableofcontents
     \endgroup
     \newpage
-    
-    % Summary
-    \input{content/B-Summary}
-    %\newpage
-    
+
     % the content of the thesis
+    % use Arabic numbering for the core for the thesis
     \pagenumbering{arabic}
     
     \input{content/1-Introduction}
@@ -65,17 +70,18 @@
     \input{content/6-Experiments}
     \newpage
     
+    \input{content/7-con-dis-future-work}
+    \newpage
+    
     % Reference list
     \bibliographystyle{abbrv}
     \bibliography{bibliography}
     \newpage
     
-    % List of abbreviations
-    
-    
     % Appendices
     \appendix
-    \input{content/Appendixes/main}
-
-
+    \input{content/Appendixes/cytoscape-example}
+    \input{content/Appendixes/gherkin-scenarios}
+    \input{content/Appendixes/experiment-protocol}
+    
 \end{document}
