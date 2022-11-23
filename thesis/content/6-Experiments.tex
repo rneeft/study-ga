@@ -171,3 +171,83 @@ The screenshots or data inside a corresponding state could have changed but this
 \includegraphics[scale=0.6]{images/6-Screenshot-Side-By-Side.png}
 \captionof{figure}{Screenshot of corresponding states side by side}\label{fig:screenshots-side-by-side}
 \endgroup
+
+\section{Real application testing} \label{sec:real-application}
+To test the change detection algorithm, an application 
+
+\subsection{Background}
+Application that is used as a toolbox for internal testing. It provide options to elevate Azure permissions (PIM), to change certificates that are used by the API tool Postman. 
+
+The application is tested in eight different versions, i.e.: 1.0.0, 1.5.0, 1.6.1, 1.7.0, 1.7.1, 1.8.0, 1.11.0 and 1.16.0. Versions without GUI changes, for example internal libraries were updated, were skipped. The exception is version 1.16.0 which does not contains a visible change by the change detection algorithm but it the latest version and therefore one screen is different. 
+
+\subsection{Issues during model creation}
+
+
+\subsection{Results}
+This sub section will discuss the different versions and the result of the change detection algorithm.
+
+\subsubsection{Version 1.0.0}
+Version 1.0.0 is the initial version of the application and only contains a certificate change feature. Because there aren't any previous versions available no change detection results can be generated.
+
+\subsubsection{Version 1.5.0}
+Version 1.5.0 contains a feature to open different pages in Azure's Privileged Identity Management (PIM) service. Figure \ref{fig:1_0_0-1_5_0} shows the result 
+
+\begingroup
+\captionsetup{type=figure}
+\includegraphics[scale=0.4]{images/6-Experiment/1_0_0-1_5_0.png}
+\captionof{figure}{Change detection results, 1.0.0->1.5.0}\label{fig:1_0_0-1_5_0}
+\endgroup
+
+\subsubsection{Version 1.6.1}
+In version 1.6.1 a grammatical error is fixed, the word TAB into TAP. This change is reflected in the change detection algorithm. In figure \ref{fig:1_5_0-1_6_1} the action "Left Click at 'TAB Certificate'" is observed to be removed and the "Left Click at 'TAP Certificate'" has been added. The rest of the application remained unchanged as seen in the figure. \\
+\begingroup
+\captionsetup{type=figure}
+\includegraphics[scale=0.5]{images/6-Experiment/1_5_0-1_6_1.png}
+\captionof{figure}{Change detection results, 1.5.0->1.6.1}\label{fig:1_5_0-1_6_1}
+\endgroup
+
+\subsubsection{Version 1.7.0 and version 1.7.1}
+Version 1.7.0 contains a numerous changes. The first change is that all the different PIM buttons are replace by a single button due to changes in the Azure Portal. The second change is a new setting page, including a 'check for update feature'. The last feature showed to have an issue with the change detection algorithm as the it can take a while to find a new version. The user, in this case \testar, is not waiting for the result and continue to test. This resulted in the message "Update available, please restart" randomly appearing and showing wrong states between actions. 
+
+Figure \ref{fig:1_6_1-1_7_0} is showing the result between version 1.6.1 and 1.7.0. Because of the random message box popping up, various changes are observed by the change detection algorithm. 
+\\
+\begingroup
+\captionsetup{type=figure}
+\includegraphics[scale=0.3]{images/6-Experiment/1_6_1-1_7_0.png}
+\captionof{figure}{Change detection results, 1.6.1->1.7.0}\label{fig:1_6_1-1_7_0}
+\endgroup
+
+Version 1.7.1 addresses the issue by halting the application until the message "Update available, please restart" appears.  The change detection results between versions 1.6.1 and 1.7.1 is displayed in figure \ref{fig:1_6_1-1_7_1} and shows a more clear graph to show which actions are removed and which are added.
+
+In the top right corner of figure \ref{fig:1_6_1-1_7_1} the check for updates feature can be viewed. At the bottom it can be seen that the different PIM buttons are removed and the one new button is added. 
+\\
+\begingroup
+\captionsetup{type=figure}
+\includegraphics[scale=0.4]{images/6-Experiment/1_6_1-1_7_1.png}
+\captionof{figure}{Change detection results, 1.6.1->1.7.1}\label{fig:1_6_1-1_7_1}
+\endgroup
+
+\subsubsection{Version 1.8.0}
+In version 1.8.0 includes a couple of new certificates and the wording of 'TAP' and 'US'. 
+
+\begingroup
+\captionsetup{type=figure}
+\includegraphics[scale=0.5]{images/6-Experiment/1_7_1-1_8_0.png}
+\captionof{figure}{Change detection results, 1.7.1->1.8.0}\label{fig:1_7_1-1_8_0}
+\endgroup
+
+\subsubsection{Version 1.11.0}
+
+In version 1.11.0 one certificate is changed. 
+
+\begingroup
+\captionsetup{type=figure}
+\includegraphics[scale=0.5]{images/6-Experiment/1_8_0-1_11_0.png}
+\captionof{figure}{Change detection results, 1.8.0->1.11.0}\label{fig:1_8_0-1_11_0}
+\endgroup
+\subsubsection{Version 1.16.0}
+
+Version 1.16.0 does not contain any changes in the actions but it is the last version of the application. Because it is the latest version, the check version outcome has a different behaviour. However, since no actions are changed in the version, zero changes are detected by the algorithm.
+
+\subsection{Improvements}
+
