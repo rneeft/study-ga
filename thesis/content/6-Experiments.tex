@@ -1,8 +1,6 @@
 \chapter{Validation \& Experiments} \label{chapter:validation-experiments}
 
-In this chapter, the validation of the algorithm is tested. This testing happens in three tests. Section \ref{sec:scenarios-testing} presents the findings of a technical test in which test scenarios are designed to test the algorithm. It starts with setting up in-memory graphs and asserting the outcome of the merge graph. Section \ref{sec:experimental-application} shows the use of an external application tested by \testar. The external application is an experimental test application in which it is possible to create three different versions.
-
-\todo{The last test is conducted using a real-life application, tested by \testar. }
+In this chapter, the validation of the algorithm is tested. This testing happens in three tests. Section \ref{sec:scenarios-testing} presents the findings of a technical test in which test scenarios are designed to test the algorithm. It starts with setting up in-memory graphs and asserting the outcome of the merge graph. Section \ref{sec:experimental-application} shows the use of an external application tested by \testar. The external application is an experimental test application in which it is possible to create three different versions. To conclude the validation, section \ref{sec:real-application} shows testing a real world application, and use the generated models to test and adjust the change detection algorithm. 
 
 \section{Technical testing} \label{sec:scenarios-testing}
 The first form of algorithm validation is a technical test done with Gherkin syntax. \textit{Gherkin} is a syntax that describes a test scenario. The syntax uses special keywords like \textbf{Given}, \textbf{When}, \textbf{Then} to describe a \textit{scenario}. An example of a Gherkin scenario can be found in listing \ref{code:gherkin-example}.
@@ -173,24 +171,46 @@ The screenshots or data inside a corresponding state could have changed but this
 \endgroup
 
 \section{Real application testing} \label{sec:real-application}
-To test the change detection algorithm, an application 
+The last validation is done by testing a real-world application with \testar and comparing the generated models. This section discusses the challenges and results. 
 
 \subsection{Background}
-Application that is used as a toolbox for internal testing. It provide options to elevate Azure permissions (PIM), to change certificates that are used by the API tool Postman. 
+The application under test is a toolbox application used to make life easier for developers. The application provides options to elevate Azure permissions (PIM) and change certificates used by the API tool Postman. 
 
-The application is tested in eight different versions, i.e.: 1.0.0, 1.5.0, 1.6.1, 1.7.0, 1.7.1, 1.8.0, 1.11.0 and 1.16.0. Versions without GUI changes, for example internal libraries were updated, were skipped. The exception is version 1.16.0 which does not contains a visible change by the change detection algorithm but it the latest version and therefore one screen is different. 
+The application is tested in eight different versions, i.e., 1.0.0, 1.5.0, 1.6.1, 1.7.0, 1.7.1, 1.8.0, 1.11.0 and 1.16.0. Versions without GUI changes, for example, internal libraries were updated were skipped. The exception is version 1.16.0, which does not contain a visible change by the change detection algorithm, but it is the latest version, and therefore one state is different. 
 
 \subsection{Issues during model creation}
+In order to retrieve useful models for the change detection algorithm, a custom protocol was used. The complete protocol can be found in appendix \ref{appendix:real-world-experiment}.
 
+\subsubsection{Empty strings as action.}
+During testing, \testar kept finding actions without a title. Due to the \testar hashing algorithm, an empty title results in equal \verb|actionId|s. An empty string in the model and therefore having the same \verb|actionId| is a problem because the change detection works upon the \verb|actionId|. 
+
+The real-world application consisted of two panels. Each panel was indicated by \testar as empty title actions. A panel is not clickable, and the protocol was adjusted to make sure it was not recognised as such. The filter of panels was done by removing the widgets with role \verb|UIACustomControl| from the set of actions during derive actions phase of \testar. 
+
+A second case was found in which buttons had an empty string. Circumventing empty titles in buttons was done by setting the internal name of the button (in \testar terms the property \verb|UIAAutomationId}| as the title when the title is empty.
+
+However, after the protocol changes, \testar still found buttons with empty titles. The root cause of this issue were buttons with an images and a title instead of only having text. Due to time constraints, it was decided to alter the application and replace the buttons with an image with buttons containing only text, as indicated in figure \ref{fig:ui-change}.\\
+
+\begingroup
+\captionsetup{type=figure}
+\includegraphics[scale=1]{images/6-Experiment/ui-change.png}
+\captionof{figure}{Change detection results, 1.0.0->1.5.0}\label{fig:ui-change}
+\endgroup
+
+\subsubsection{Blackholes in the model}
+During testing, it happens that \testar is not visiting all actions. \testar shows this in the console output with the message: '$n$ unvisited actions left' in which $n > 0$. Opening the model shows a black hole in the abstract model. A black hole in the \testar abstract model is a unique Vertex that functions as an endpoint for all the unvisited abstract actions \cite{mulders2022Statemodel}. 
+
+Comparing two models with a black hole made the change detection algorithm crash since it cannot correlate whether the missing actions are removed or not yet visited. 
+
+The test sequences were repeated until the console showed the message  '0 unvisited actions left' to generate a model without a black hole.
 
 \subsection{Results}
-This sub section will discuss the different versions and the result of the change detection algorithm.
+This sub-section will discuss the different versions and the result of the change detection algorithm.
 
 \subsubsection{Version 1.0.0}
-Version 1.0.0 is the initial version of the application and only contains a certificate change feature. Because there aren't any previous versions available no change detection results can be generated.
+Version 1.0.0 is the initial version of the application and only contains a certificate change feature. Because there are no previous versions available, no change detection results can be generated.
 
 \subsubsection{Version 1.5.0}
-Version 1.5.0 contains a feature to open different pages in Azure's Privileged Identity Management (PIM) service. Figure \ref{fig:1_0_0-1_5_0} shows the result 
+Version 1.5.0 added a feature to open different pages in Azure's Privileged Identity Management (PIM) service. The result of the change detection algorithm is shown in figure \ref{fig:1_0_0-1_5_0}. 
 
 \begingroup
 \captionsetup{type=figure}
@@ -199,7 +219,7 @@ Version 1.5.0 contains a feature to open different pages in Azure's Privileged I
 \endgroup
 
 \subsubsection{Version 1.6.1}
-In version 1.6.1 a grammatical error is fixed, the word TAB into TAP. This change is reflected in the change detection algorithm. In figure \ref{fig:1_5_0-1_6_1} the action "Left Click at 'TAB Certificate'" is observed to be removed and the "Left Click at 'TAP Certificate'" has been added. The rest of the application remained unchanged as seen in the figure. \\
+In version 1.6.1, a grammatical error is fixed, where the word 'TAB' is changed into 'TAP'. This change is reflected in the change detection algorithm. In figure \ref{fig:1_5_0-1_6_1}, the action "Left Click at 'TAB Certificate'" is observed to be removed, and the "Left Click at 'TAP Certificate'" has been added. The rest of the application remained unchanged, as seen in the figure. \\
 \begingroup
 \captionsetup{type=figure}
 \includegraphics[scale=0.5]{images/6-Experiment/1_5_0-1_6_1.png}
@@ -207,9 +227,11 @@ In version 1.6.1 a grammatical error is fixed, the word TAB into TAP. This chang
 \endgroup
 
 \subsubsection{Version 1.7.0 and version 1.7.1}
-Version 1.7.0 contains a numerous changes. The first change is that all the different PIM buttons are replace by a single button due to changes in the Azure Portal. The second change is a new setting page, including a 'check for update feature'. The last feature showed to have an issue with the change detection algorithm as the it can take a while to find a new version. The user, in this case \testar, is not waiting for the result and continue to test. This resulted in the message "Update available, please restart" randomly appearing and showing wrong states between actions. 
+Version 1.7.0 contains numerous changes. The first change is that a single button replaces all the different PIM buttons due to changes in the Azure Portal. The second change is a new setting page, including a 'check for update feature. 
 
-Figure \ref{fig:1_6_1-1_7_0} is showing the result between version 1.6.1 and 1.7.0. Because of the random message box popping up, various changes are observed by the change detection algorithm. 
+The check for updates feature showed an issue with the change detection algorithm, as it can take a while to find a new version. \testar is not waiting for the result and continues to test, resulting in the message "Update available, please restart" randomly appearing and showing wrong states between actions. 
+
+Figure \ref{fig:1_6_1-1_7_0} shows the result between version 1.6.1 and 1.7.0. Because of the random message box popping up, various changes are observed by the change detection algorithm. 
 \\
 \begingroup
 \captionsetup{type=figure}
@@ -217,19 +239,19 @@ Figure \ref{fig:1_6_1-1_7_0} is showing the result between version 1.6.1 and 1.7
 \captionof{figure}{Change detection results, 1.6.1->1.7.0}\label{fig:1_6_1-1_7_0}
 \endgroup
 
-Version 1.7.1 addresses the issue by halting the application until the message "Update available, please restart" appears.  The change detection results between versions 1.6.1 and 1.7.1 is displayed in figure \ref{fig:1_6_1-1_7_1} and shows a more clear graph to show which actions are removed and which are added.
+Version 1.7.1 addresses the issue by halting the application until the message "Update available, please restart" appears. The change detection results between versions 1.6.1 and 1.7.1 are displayed in figure \ref{fig:1_6_1-1_7_1} and show a more precise graph showing which actions are removed and which are added.
 
-In the top right corner of figure \ref{fig:1_6_1-1_7_1} the check for updates feature can be viewed. At the bottom it can be seen that the different PIM buttons are removed and the one new button is added. 
+The check for updates feature can be viewed in the top right corner of figure \ref{fig:1_6_1-1_7_1}. At the bottom, it can be seen that the different PIM buttons are removed, and one new button is added. 
 \\
 \begingroup
 \captionsetup{type=figure}
-\includegraphics[scale=0.4]{images/6-Experiment/1_6_1-1_7_1.png}
+\includegraphics[scale=0.35, angle=90]{images/6-Experiment/1_6_1-1_7_1.png}
 \captionof{figure}{Change detection results, 1.6.1->1.7.1}\label{fig:1_6_1-1_7_1}
 \endgroup
 
 \subsubsection{Version 1.8.0}
-In version 1.8.0 includes a couple of new certificates and the wording of 'TAP' and 'US'. 
-
+Version 1.8.0 includes a couple of new certificates and the wording of 'TAP' and 'US'. 
+\\
 \begingroup
 \captionsetup{type=figure}
 \includegraphics[scale=0.5]{images/6-Experiment/1_7_1-1_8_0.png}
@@ -237,9 +259,8 @@ In version 1.8.0 includes a couple of new certificates and the wording of 'TAP' 
 \endgroup
 
 \subsubsection{Version 1.11.0}
-
-In version 1.11.0 one certificate is changed. 
-
+In version 1.11.0, one certificate is changed. 
+\\
 \begingroup
 \captionsetup{type=figure}
 \includegraphics[scale=0.5]{images/6-Experiment/1_8_0-1_11_0.png}
@@ -247,7 +268,13 @@ In version 1.11.0 one certificate is changed.
 \endgroup
 \subsubsection{Version 1.16.0}
 
-Version 1.16.0 does not contain any changes in the actions but it is the last version of the application. Because it is the latest version, the check version outcome has a different behaviour. However, since no actions are changed in the version, zero changes are detected by the algorithm.
+Version 1.16.0 does not contain any changes in the actions, but it is the latest version of the application. Because version 1.16.0 is the latest version, the feature that checks for a newer version shows the message "You are running the latest version". 
+
+One of the change detection limitations can be observed in the change detection result between versions 1.11.0 and 1.16.0 since it compares actions. Although the message is different, the actions 'check latest version' and 'OK' are still the same. In the future, the change algorithm can be changed to recognise those changes as well. 
 
 \subsection{Improvements}
+During testing with the real-world application, a few improvements were made to the algorithm and graph merge flow. The first is a screenshot display of a changed, added or removed state. Showing the screenshot in an altered state helped identify what has changed without clicking every altered state. 
 
+All the abstract actions have a label showing what the action represents. The element data used for the label is, by default, the \verb|description|. The label can now be specified by the user, for example, for troubleshooting reasons. 
+
+The last improvement is an option to change the data element used for the comparison. By default, the \verb|actionId| data element is used to compare actions with each other. Changing this setting to a data element more suitable to another model could be handy.  

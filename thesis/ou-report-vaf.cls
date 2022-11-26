@@ -247,7 +247,7 @@
 {
   % list of keywords
   morekeywords={
-    Scenario, Given, And, When, Then, Feature, Background
+    Scenario, Given, And, When, Then, Feature, Background, ClassName, Name, Value
   },
   keywordstyle=\color{ou-red}, % style of keywords
 }

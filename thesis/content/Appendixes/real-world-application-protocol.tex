@@ -1,0 +1,272 @@
+\chapter{Custom Protocol for the real world application} \label{appendix:real-world-experiment}
+
+This appendix shows the custom protocol used for generating a useful model for the real world application.
+
+\begin{lstlisting}[language=java, basicstyle=\tiny, caption=Protocol for the real world application, label=code:real-world-app-protocol]
+import org.testar.*;
+import java.util.Set;
+import org.testar.RandomActionSelector;
+import org.testar.monkey.alayer.*;
+import org.testar.monkey.Drag;
+import org.testar.monkey.alayer.actions.*;
+import org.testar.protocols.DesktopProtocol;
+import org.testar.monkey.alayer.windows.UIATags;
+import org.testar.monkey.alayer.windows.UIARoles;
+import org.testar.monkey.alayer.exceptions.*;
+import java.util.*;
+import java.util.zip.CRC32;
+import static org.testar.monkey.alayer.Tags.Blocked;
+import static org.testar.monkey.alayer.Tags.Enabled;
+
+public class Protocol_desktop_generic_statemodel extends DesktopProtocol {
+
+
+    @Override
+    protected void buildStateActionsIdentifiers(State state, Set<Action> actions) {
+        CodingManager.buildIDs(state, actions);
+        // Custom the Action AbstractIDCustom identifier
+        for(Action a : actions) {
+            if(a.get(Tags.OriginWidget) != null) {
+                Widget widget = a.get(Tags.OriginWidget);
+                String widgetTitle = widget.get(Tags.Title, "");
+
+                if (widgetTitle.equals("")){
+                    // if widgettitle is empty try to get the UIAAutomationId as title. 
+                    widgetTitle = widget.get(UIATags.UIAAutomationId, "unkown");
+                }
+                // set the identifier to only containing the title and not to include the parent
+                String customIdentifier = CodingManager.ID_PREFIX_ACTION + CodingManager.ID_PREFIX_ABSTRACT_CUSTOM + lowCollisionID(widgetTitle);
+                a.set(Tags.AbstractIDCustom, customIdentifier);
+            }
+            else{
+                a.set(Tags.AbstractIDCustom, "RN?");
+            }
+        }
+    }
+
+    // ############
+    //  IDS CODING
+    // ############
+    private static String lowCollisionID(String text){ // reduce ID collision probability
+        CRC32 crc32 = new CRC32();
+        crc32.update(text.getBytes());
+        return Integer.toUnsignedString(text.hashCode(), Character.MAX_RADIX) +
+                Integer.toHexString(text.length()) +
+                crc32.getValue();
+    }
+
+    /**
+     * This method is used by TESTAR to determine the set of currently available actions.
+     * You can use the SUT's current state, analyze the widgets and their properties to create
+     * a set of sensible actions, such as: "Click every Button which is enabled" etc.
+     * The return value is supposed to be non-null. If the returned set is empty, TESTAR
+     * will stop generation of the current action and continue with the next one.
+     * @param system the SUT
+     * @param state the SUT's current state
+     * @return  a set of actions
+     */
+    @Override
+    protected Set<Action> deriveActions(SUT system, State state) throws ActionBuildException{
+        //The super method returns a ONLY actions for killing unwanted processes if needed, or bringing the SUT to
+        //the foreground. You should add all other actions here yourself.
+        // These "special" actions are prioritized over the normal GUI actions in selectAction() / preSelectAction().
+        Set<Action> actions = super.deriveActions(system,state);
+
+        //actions = deriveClickTypeScrollActionsFromTopLevelWidgets(actions, state).getAvailableActions();
+        // Derive left-click actions, click and type actions, and scroll actions from
+        // top level (highest Z-index) widgets of the GUI:
+         actions = deriveClickTypeScrollActionsFromTopLevelWidgets(actions, system, state);
+
+        if(actions.isEmpty()){
+            // If the top level widgets did not have any executable widgets, try all widgets:
+            // Derive left-click actions, click and type actions, and scroll actions from
+            // all widgets of the GUI:
+            //actions = deriveClickTypeScrollActionsFromAllWidgets(actions, state).getAvailableActions();
+            actions = deriveClickTypeScrollActionsFromAllWidgetsOfState(actions, system, state);
+        }
+
+        //return the set of derived actions
+        return actions;
+    }
+
+    /**
+     * This method is called when the TESTAR requests the state of the SUT.
+     * Here you can add additional information to the SUT's state or write your
+     * own state fetching routine. The state should have attached an oracle
+     * (TagName: <code>Tags.OracleVerdict</code>) which describes whether the
+     * state is erroneous and if so why.
+     * @return  the current state of the SUT with attached oracle.
+     */
+    @Override
+    protected State getState(SUT system) throws StateBuildException {
+        State state = super.getState(system);
+        for (Widget w : state){
+            // set title if empty but the button got a UI Automation ID
+            String widgetUIAId = w.get(UIATags.UIAAutomationId, "");
+            String widgetTitle = w.get(Tags.Title, "");
+
+            if (widgetTitle.equals("") && !widgetUIAId.equals("") &&  w.get(Tags.Role, Roles.Widget).equals(UIARoles.UIAButton)){
+                w.set(Tags.Title, widgetUIAId);
+            }
+        }
+
+        return state;
+    }
+
+    /**
+     * Select one of the available actions using an action selection algorithm (for example random action selection)
+     * @param state the SUT's current state
+     * @param actions the set of derived actions
+     * @return  the selected action (non-null!)
+     */
+    @Override
+    protected Action selectAction(State state, Set<Action> actions){
+        //Call the preSelectAction method from the AbstractProtocol so that, if necessary,
+        //unwanted processes are killed and SUT is put into foreground.
+        Action retAction = super.selectAction(state, actions);
+
+        if (retAction== null) {
+            //if no preSelected actions are needed, then implement your own action selection strategy
+            //using the action selector of the state model:
+            retAction = stateModelManager.getAbstractActionToExecute(actions);
+        }
+        if(retAction==null) {
+            // if state model fails, use random (default would call preSelectAction() again, causing double actions HTML report):
+            retAction = RandomActionSelector.selectAction(actions);
+        }
+        return retAction;
+    }
+    /**
+     * Adding derived actions into the given set of actions and returning the modified set of actions.
+     *
+     * @param actions
+     * @param system
+     * @param state
+     * @return
+     */
+    @Deprecated
+    protected Set<Action> deriveClickTypeScrollActionsFromAllWidgetsOfState(Set<Action> actions, SUT system, State state){
+        // To derive actions (such as clicks, drag&drop, typing ...) we should first create an action compiler.
+        StdActionCompiler ac = new AnnotatingActionCompiler();
+
+        // To find all possible actions that TESTAR can click on we should iterate through all widgets of the state.
+        for(Widget w : state){
+
+            if(w.get(Tags.Role, Roles.Widget).toString().equalsIgnoreCase("UIAMenu")){
+                // filtering out actions on menu-containers (that would add an action in the middle of the menu)
+                continue; // skip this iteration of the for-loop
+            }
+            
+            if(w.get(Tags.Role, Roles.Widget).toString().equalsIgnoreCase("UIACustomControl")){
+                // filtering out actions on menu-containers (that would add an action in the middle of the menu)
+                continue; // skip this iteration of the for-loop
+            }
+
+            // skip widgets that do not have a title
+			String widgetTitle = w.get(Tags.Title, "");
+          
+            // Only consider enabled and non-blocked widgets
+            if(!widgetTitle.equals("") && w.get(Enabled, true) && !w.get(Blocked, false)){
+
+                // Do not build actions for widgets on the blacklist
+                // The blackListed widgets are those that have been filtered during the SPY mode with the
+                //CAPS_LOCK + SHIFT + Click clickfilter functionality.
+                if (!blackListed(w)){
+
+                    //For widgets that are:
+                    // - clickable
+                    // and
+                    // - unFiltered by any of the regular expressions in the Filter-tab, or
+                    // - whitelisted using the clickfilter functionality in SPY mode (CAPS_LOCK + SHIFT + CNTR + Click)
+                    // We want to create actions that consist of left clicking on them
+                    if(isClickable(w) && (isUnfiltered(w) || whiteListed(w))) {
+                        //Create a left click action with the Action Compiler, and add it to the set of derived actions
+                        actions.add(ac.leftClickAt(w));
+                    }
+                   
+                    //For widgets that are:
+                    // - typeable
+                    // and
+                    // - unFiltered by any of the regular expressions in the Filter-tab, or
+                    // - whitelisted using the clickfilter functionality in SPY mode (CAPS_LOCK + SHIFT + CNTR + Click)
+                    // We want to create actions that consist of typing into them
+                    if(isTypeable(w) && (isUnfiltered(w) || whiteListed(w))) {
+                        //Create a type action with the Action Compiler, and add it to the set of derived actions
+                        actions.add(ac.clickTypeInto(w, this.getRandomText(w), true));
+                    }
+                    //Add sliding actions (like scroll, drag and drop) to the derived actions
+                    //method defined below.
+                    addSlidingActions(actions,ac,SCROLL_ARROW_SIZE,SCROLL_THICK,w);
+                }
+            }
+        }
+        return actions;
+    }
+
+    /**
+     * Adding derived actions into the given set of actions and returning the modified set of actions.
+     *
+     * @param actions
+     * @param system
+     * @param state
+     * @return
+     */
+    protected Set<Action> deriveClickTypeScrollActionsFromTopLevelWidgets(Set<Action> actions, SUT system, State state){
+        
+        // To derive actions (such as clicks, drag&drop, typing ...) we should first create an action compiler.
+        StdActionCompiler ac = new AnnotatingActionCompiler();
+
+        // iterate through top level widgets based on Z-index:
+        for(Widget w : getTopWidgets(state)){
+
+            if(w.get(Tags.Role, Roles.Widget).toString().equalsIgnoreCase("UIAMenu")){
+                // filtering out actions on menu-containers (that would add an action in the middle of the menu)
+                continue; // skip this iteration of the for-loop
+            }
+
+           if(w.get(Tags.Role, Roles.Widget).toString().equalsIgnoreCase("UIACustomControl")){
+                // filtering out actions on custom controls like panels
+                continue; // skip this iteration of the for-loop
+           }
+            
+            String widgetTitle = w.get(Tags.Title, "");
+
+            // Only consider enabled and non-blocked widgets
+            if(!widgetTitle.equals("") && w.get(Enabled, true) && !w.get(Blocked, false)){
+
+                // Do not build actions for widgets on the blacklist
+                // The blackListed widgets are those that have been filtered during the SPY mode with the
+                //CAPS_LOCK + SHIFT + Click clickfilter functionality.
+                if (!blackListed(w)){
+
+                    //For widgets that are:
+                    // - clickable
+                    // and
+                    // - unFiltered by any of the regular expressions in the Filter-tab, or
+                    // - whitelisted using the clickfilter functionality in SPY mode (CAPS_LOCK + SHIFT + CNTR + Click)
+                    // We want to create actions that consist of left clicking on them
+                    if(isClickable(w) && (isUnfiltered(w) || whiteListed(w))) {
+                        //Create a left click action with the Action Compiler, and add it to the set of derived actions
+                        actions.add(ac.leftClickAt(w));
+                    }
+
+                    //For widgets that are:
+                    // - typeable
+                    // and
+                    // - unFiltered by any of the regular expressions in the Filter-tab, or
+                    // - whitelisted using the clickfilter functionality in SPY mode (CAPS_LOCK + SHIFT + CNTR + Click)
+                    // We want to create actions that consist of typing into them
+                    if(isTypeable(w) && (isUnfiltered(w) || whiteListed(w))) {
+                        //Create a type action with the Action Compiler, and add it to the set of derived actions
+                        actions.add(ac.clickTypeInto(w, this.getRandomText(w), true));
+                    }
+                    //Add sliding actions (like scroll, drag and drop) to the derived actions
+                    //method defined below.
+                    addSlidingActions(actions,ac,SCROLL_ARROW_SIZE,SCROLL_THICK,w);
+                }
+            }
+        }
+        return actions;
+    }
+}
+\end{lstlisting}
