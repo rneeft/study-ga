@@ -37,12 +37,11 @@ The outcome of \ref{rq:application-outside-testar} is a website that the testers
 
 Additional work needs to be done to create the new analysis website. Industrial standards need to be implemented, including but not limited to web security, authentication to the web server, providing easy navigation and switching of orientDB databases. 
 
-The approach to creating the application outside of \testar will be conducted iteratively and incrementally in collaboration with the supervisors and F-Secure. During each weekly meeting, updates will be given, and feedback will be incorporated as soon as possible. 
+The approach to creating the application outside of \testar will be conducted iterative and incrementally in collaboration with the supervisors and WithSecure. During each weekly meeting, updates will be given, and feedback will be incorporated as soon as possible. 
 
 \subsection{\ref{rq:how-making-change-detection-algorithm} \rqHowMakingChangeDetectionAlgorithm}
 
-The outcome of \ref{rq:how-making-change-detection-algorithm} is an implementation of change detection on the abstract layer of two versions of the GUI. The change detection algorithm will not be executed on the concrete layer since that layer can contain a 
-Especially since every change in the widget tree, like the button background, triggers a new state in the concrete layer. 
+The outcome of \ref{rq:how-making-change-detection-algorithm} is an implementation of change detection on the abstract layer of two versions of the GUI. The change detection algorithm will not be executed on the concrete layer since that layer can contain lots states, since every change in the widget tree, like the button background, triggers a new state. 
 
 The technical aspects of the change detection algorithm are validated with an experimental application. In a later stage, the algorithm is validated with research question \ref{rq:how-to-visualise-result} since it is hard to validate an algorithm without seeing the results. 
 

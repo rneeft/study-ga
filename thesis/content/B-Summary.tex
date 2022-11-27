@@ -1,7 +1,12 @@
-\chapter*{Summary}
-\addcontentsline{toc}{chapter}{Summary}
-Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.
-Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.
-Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin pharetra nonummy pede. Mauris et orci.
-Aenean nec lorem. In porttitor. Donec laoreet nonummy augue.
+\chapter*{Abstract}
+\addcontentsline{toc}{chapter}{Abstract}
 
+\testar is an application that automatically tests GUI applications. During testing, \testar is inferring a model based on the GUI. This model captures the different states of the GUI, the actions between the states and other data, like UI widgets information. All this data is stored in a graph database that can be queried separately outside the \testar application. 
+
+This thesis aims to compare the inferred models of two consequence versions of an application and give the test engineer an overview of which actions are altered. Providing an overview of changes between two versions is a feature in many automated GUI testing tools. However, almost all of them can only provide an overview of removed features (actions) because they execute test sequences from a previous version on a newer version and are, therefore, unable to detect newer actions or features. 
+
+This thesis researched how a change detection algorithm can be added to the \testar application. Because \testar can be run without a GUI in containerised (DevOps) environment, the change detection algorithm is built in a separate application. Besides having a change detection algorithm, the separate application offers other benefits, such as an overview of the available models and test sequences and showing the inferred model.
+
+Besides the change detection algorithm, the outcome of it must be to a test engineer. The last research question of this thesis addresses this by presenting changes in an application's version in the same graph component in which the inferred model can be viewed. However, the two models are merged into one graph, and the changes are indicated with removed and added states.  
+
+The research is concluded with experimentation of the change detection algorithm. Experimentation shows that the change detection algorithm is technically working; more research is needed on creating useful (abstract) models for the change detection algorithm. One crucial key finding of the change detection is that the models need to have deterministic actions so that the algorithm can compare them between versions. Having deterministic action identifier is not the default behaviour in \testar. 
