@@ -9,7 +9,7 @@ This section introduces the thesis discussing the background and context, follow
 \section{Background}
 The \testar tool solves a significant obstacle when it comes to testing the GUI of an application. With \testar, the tester can automatically start testing the GUI without any upfront scripts. \testar automatically generates and executes test sequences based on elements derived from the GUI \cite{VosAho2021}. In recent master graduation assignments, \testar has been extended with an inferred model generation module \cite{thesisMulders}, and it became easier to integrate \testar in build and release pipelines in a DevOps environment \cite{thesisSlomp}. Those two additions make it easier to run \testar upon each source code integration and retrieve an inferred model from the GUI. Two inferred models were used in a proof-of-concept application \cite{stateDiff}, that shows that change detection can be done. 
 
-Some companies might write down changes to the software in a changelog. However, some changelogs might not be complete and unwanted side effects might be missing entirely. Comparing two inferred models shows all the changes between versions of a SUT, even the unwanted ones.
+Some companies might write down changes to the software in a change-log. However, some change-logs might not be complete and unwanted side effects might be missing entirely. Comparing two inferred models shows all the GUI-related changes between versions of a SUT, even the unwanted ones.
 
 \section{Research problem}
 Besides a proof-of-concept approach, \testar does not have a feature that compares two inferred models to find changes in two versions of a GUI of the application under test. \testar has an option to replay a previously recorded sequence \cite{testar-manual} on a newer version of the application but that only yield removal results because the previously known execution is being executed on a newer version. It cannot find any new features in the GUI \cite{VosAho2021}.
@@ -26,7 +26,7 @@ The second question "\textit{\rqHowMakingChangeDetectionAlgorithm}" will use the
 To visualise the outcome of \ref{rq:how-making-change-detection-algorithm} the third and last research question is formulated as "\textit{\rqHowToVisualiseResult}"
 
 \section{Scope}
-The scope of the research is change detection in GUI inferred models created by \testar. Researching how to make models and making significant changes to the creation of models are omitted. However, tweaking the model generation, like adding data that is not saved at the moment, and configuring \testar to create a good model, are in scope.
+The scope of the research is change detection using inferred GUI models created by \testar. Researching how to make models and making significant changes to the creation of models are omitted. However, tweaking the model generation, like adding data that is not saved at the moment, and configuring \testar to create a good model, are in scope.
 
 \section{Contribution}
 When change detection is available in \testar, it becomes easy for testers to run the comparison in a continuous integration environment and receive an overview of the changes in an updated software version.

@@ -1,5 +1,5 @@
 \chapter{Research questions} \label{chapter:research}
-In this chapter, the research questions for the thesis are formulated. What research method will be used, and how the questions be validated.
+In this chapter, the research questions for the thesis are formulated. What research method will be used, and how the questions will be validated.
 
 \section{Context}
 This thesis revolves around change detection and visualising the comparison between two consequent versions of the application under test. The result is an external application that connects to OrientDB and calculates and shows the model comparison. Figure \ref{fig:components-overview} shows the different components involved. The \textit{New Analysis Website} component is the component that is created. Section \ref{sec:components-explained} explained the different components in more detail.
@@ -21,7 +21,7 @@ The main research question is:
 
 \textbf{\rqMainQuestion}
 
-The main research question is divide into three sub questions:
+The main research question is divided into three sub-questions:
 
 \begin{questions}
     \item \rqApplicationOutsideTestar \label{rq:application-outside-testar}
@@ -29,22 +29,22 @@ The main research question is divide into three sub questions:
     \item \rqHowToVisualiseResult \label{rq:how-to-visualise-result}
 \end{questions}
 
-In the next sections the research questions are explained in more detail.
+In the next sections, the research questions are explained in more detail.
 
 \subsection{\ref{rq:application-outside-testar} \rqApplicationOutsideTestar}
 
-The outcome of \ref{rq:application-outside-testar} is a website that the testers can use to analyse the test results and execute the change detection algorithm. The current analysis website is embedded in the \testar tool. Since \testar can run inside a container during a continuous deployment \cite{thesisSlomp}. Even though testers do not need \testar to run tests on the GUI, they need to install \testar onto their computers to view the analysis website. 
+The outcome of \ref{rq:application-outside-testar} is a website that the testers can use to analyse the test results and execute the change detection algorithm. The current analysis website is embedded in the \testar tool. Since \testar can run inside a container during a continuous deployment \cite{thesisSlomp}, even though testers do not need \testar to run tests on the GUI, they need to install \testar onto their computers to view the analysis website. 
 
-Additional work needs to be done to create the new analysis website. Industrial standards need to be implemented, including but not limited to web security, authentication to the web server, providing easy navigation and switching of orientDB databases. 
+Additional work needs to be done to create the new analysis website. Industrial standards need to be implemented, including but not limited to web security, authentication to the web server, providing easy navigation and switching of OrientDB databases. 
 
-The approach to creating the application outside of \testar will be conducted iterative and incrementally in collaboration with the supervisors and WithSecure. During each weekly meeting, updates will be given, and feedback will be incorporated as soon as possible. 
+The approach to creating the application outside of \testar will be conducted iteratively and incrementally in collaboration with the supervisors and WithSecure. During each weekly meeting, updates will be given, and feedback will be incorporated as soon as possible. 
 
 \subsection{\ref{rq:how-making-change-detection-algorithm} \rqHowMakingChangeDetectionAlgorithm}
 
-The outcome of \ref{rq:how-making-change-detection-algorithm} is an implementation of change detection on the abstract layer of two versions of the GUI. The change detection algorithm will not be executed on the concrete layer since that layer can contain lots states, since every change in the widget tree, like the button background, triggers a new state. 
+The outcome of \ref{rq:how-making-change-detection-algorithm} is an implementation of change detection on the abstract layer of two versions of the GUI. The change detection algorithm will not be executed on the concrete layer since that layer can contain lots of states since every change in the widget tree, like the button background, triggers a new state. 
 
 The technical aspects of the change detection algorithm are validated with an experimental application. In a later stage, the algorithm is validated with research question \ref{rq:how-to-visualise-result} since it is hard to validate an algorithm without seeing the results. 
 
 \subsection{\ref{rq:how-to-visualise-result} \rqHowToVisualiseResult}
 
-After the change detection algorithm, the output must be displayed to the user. with \ref{rq:how-to-visualise-result} an research is conducted how to. Besides the research, the actual visualisation requirements will be discussed with the \testar stakeholders.
+After the change detection algorithm, the output must be displayed to the user. With \ref{rq:how-to-visualise-result} a research is conducted how to. Besides the research, the actual visualisation requirements will be discussed with the \testar stakeholders.

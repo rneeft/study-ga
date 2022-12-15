@@ -12,7 +12,7 @@ All the information about a model and graph is stored in OrientDB. The new Analy
 
 The \verb|GraphEngine| retrieves the data from each layer and transforms them into an internal model. A UML class diagram of the internal model can be viewed in figure \ref{fig:class-diagram-models} (the \verb|AppGraph| does not play a role in displaying the graph). When the transformation from the OrientDB database to graph elements is completed, the engine returns them in a list structure. 
 
-Beside the vertexes and edges, the \verb|GraphEngine| can also include a compound object. A compound object group graphs objects together. Figure \ref{fig:compound-example} shows a compound layer that groups the concrete states into the group 'ConcreteLayer'. The new Analysis website has options on the settings page to enable the grouping of items into a compound layer or not.
+Beside the vertexes and edges, the \verb|GraphEngine| can also include a compound object. A compound object group graph objects together. Figure \ref{fig:compound-example} shows a compound layer that groups the concrete states into the group 'ConcreteLayer'. The new Analysis website has options on the settings page to enable the grouping of items into a compound layer or not.
 
 \begingroup
 \captionsetup{type=figure}
@@ -20,7 +20,7 @@ Beside the vertexes and edges, the \verb|GraphEngine| can also include a compoun
 \captionof{figure}{Compound object grouping concrete states together}\label{fig:compound-example}
 \endgroup
 
-After the list with \verb|GraphElement|'s is retrieved, it must be passed to the Cytoscape.js library in JSON objects. Since the \verb|GraphElement| is created with the idea of JSON in mind, the serialisation to JSON is easy. An example of the serialisation result can be viewed in listing \ref{code:graph-json}. The data contains an array of elements each having three attributes: \verb|group|, \verb|data| and \verb|classes|. The \textit{group} either contains the value nodes or edges, representing their graph element. The attribute \verb|data| contains the \verb|id| of the element and all the additional data about the vertex/edge. For an edge, that data also contains the target and source id, specifying the id of two specific vertices. The element classes are similar to classes in \textsc{CSS} and can be used to style the elements in the GUI. 
+After the list with \verb|GraphElement|s are retrieved, it must be passed to the Cytoscape.js library in JSON objects. Since the \verb|GraphElement| is created with the idea of JSON in mind, the serialisation to JSON is easy. An example of the serialisation result can be viewed in listing \ref{code:graph-json}. The data contains an array of elements each having three attributes: \verb|group|, \verb|data| and \verb|classes|. The \textit{group} either contains the value nodes or edges, representing their graph element. The attribute \verb|data| contains the \verb|id| of the element and all the additional data about the vertex/edge. For an edge, that data also contains the target and source id, specifying the id of two specific vertices. The element classes are similar to classes in \textsc{CSS} and can be used to style the elements in the GUI. 
 
 The result of listing \ref{code:graph-json} generates the graph visible in figure \ref{fig:graph-example}. The full HTML code is added as appendix \ref{appendix:cytoscape-example}. 
 

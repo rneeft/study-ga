@@ -2,7 +2,7 @@
 This chapter will conclude this thesis by showing the study's key findings. It will answer the research questions, particularly the contribution to \testar, as well as the limitation of the study. This chapter will conclude with opportunities for further research. 
 
 \section{Contributions}
-There are two significate contributions to this thesis. The first is a new application that works outside and can be developed outside the \testar code bases. This application can be accessed through a web browser. Besides an installation by a system administrator, no additional installation is required on the computer of a test engineer. 
+There are two significant contributions in this thesis. The first is a new application that works outside and can be developed outside the \testar code bases. This application can be accessed through a web browser. Besides an installation by a system administrator, no additional installation is required on the computer of a test engineer. 
 
 \testar is created with the Java development stack. The new web application is created with the Microsoft development stack. This fact can tempt different students who are less familiar with Java but want to do their graduation assignment in Microsoft technologies. 
 
@@ -10,7 +10,7 @@ The second significant contribution is the change detection algorithm. Previousl
 
 The algorithm's outcome is displayed in a merge graph on the new analysis website. The test engineer can navigate the changes by following the execution flow from the initial state to the changed state.
 
-The algorithm works by traversing the new application's graph and comparing each action and state with a shadow traversal of the old graph. When an action is not found in the old version, the algorithm marks it as old. When an action is found, the algorithm follows the actions it graphs and marks the target state as corresponding states. If a change is detected in any outgoing actions in the corresponding states, then the algorithm marks the corresponding state as changed.
+The algorithm works by traversing the new application's graph and comparing each action and state with a shadow traversal of the old graph. When an action is not found in the old version, the algorithm marks it as old. When an action is found, the algorithm follows the actions in both graphs and marks the target state as corresponding states. If a change is detected in any outgoing actions in the corresponding states, then the algorithm marks the corresponding state as changed.
 
 \section{Limitations}
 This section will discuss some of the critical limitations of the outcome and how they can be overcome in future research. 
@@ -36,12 +36,12 @@ The algorithm evolves around actions that are removed or added. Consequently, th
 The application can be extended with a module that investigates corresponding states with an improved change detection algorithm. One can think about screenshot comparison, like in Murphy, or the comparison of the widget tree, or both. One factor to consider is that the abstract layer contains neither screenshots nor widget trees; therefore, those elements must be taken from the concrete layer, which contains one or more states per abstract state. 
 
 \subsubsection{Major changes in a newer version}
-The algorithm cannot handle significant changes accurately. Assume there is an updated application with parts of the application moved to a completely different location. The change detection algorithm will be able to find it, but it will show it as removed in the old version and completely new in the updated version despite showing it as moved. 
+The algorithm cannot handle significant changes accurately. Assume there is an updated application with parts of the application moved to a completely different location. The change detection algorithm will be able to find it, but it will show it as removed in the old version and completely new in the updated version instead of showing it as moved. 
 
-To implement the options to recognise \textit{moved} the algorithm \textbf{and abstract layer} needs to be upgraded. The abstract layer must not only yield a deterministic action id between versions but also ensure that the generated action ids are unique in the abstract layer. The algorithm needs to be adjusted to recognise actions id in the overall graph. 
+To implement the option to recognise \textit{moved}, the algorithm and abstract layer needs to be upgraded. The abstract layer must not only yield a deterministic action id between versions but also ensure that the generated action ids are unique in the abstract layer. The algorithm needs to be adjusted to recognise actions id in the overall graph. 
  
 \subsection{Various other future research}
-In the last section, the limitation and corresponding future research are discussed. This section enumerates various other research topics.
+In the previous section, the limitations and corresponding future research are discussed. This section enumerates various other research topics.
 
 \begin{enumerate}
 \item The result of the algorithm is not saved back into a database. Saving it back, or exporting it, might save time. 

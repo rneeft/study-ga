@@ -27,7 +27,7 @@ OrientDB is the data storage for \testar. The new application presents the data 
 
 An alternative way of querying the data is using the query \verb|GET| operation. While it is easy to query the data, it is vulnerable to SQL injection since the parameters are directly used in the SQL query. Those parameters can be changed by user input. 
 
-The current solution in which the queries are sent from the UI to the .NET server is not entirely foolproof either. For example, using the Burp Suite is still possible to alter the \verb|POST| message body and attack the OrientDB database. This issue can be circumvented by setting up \verb|REST| endpoints on the.NET Server that created the SQL calls on the server-side.
+The current solution in which the queries are sent from the UI to the .NET server is not entirely foolproof either. For example, using the Burp Suite it is still possible to alter the \verb|POST| message body and attack the OrientDB database. This issue can be circumvented by setting up \verb|REST| endpoints on the.NET Server that created the SQL calls on the server-side.
 
 It is not recommended to expose the OrientDB database directly to a public network \cite{orientdb-security}. Besides the orientDb recommended best practices and issues accessing the database on a web frontend, a proxy/middleware component is built. The following section explains the .NET server in more detail. 
 
@@ -40,7 +40,7 @@ The second issue prevented the analysis website from accessing and reading the c
 
 It was impossible to retrieve the \verb|osessionid| header and reuse it in the further data retrieval calls. Because the web browser blocked the session header, we could store the users' credentials in local storage, making them available for retrieval with a Cross-Site Scripting attack. Section \ref{sec:auth} will look into authentication and authorisation in more detail.
 
-The OrienDB URL and name of the \testar state model database are provided in the server configuration. Based on user feedback, it is also possible to enable muti-database features. Enabling the multi-database feature enables to user to specify the name of the database during logging in. For example, if the user wants to connect to the database \verb|TestarData| and the username is \verb|Kirk|, the username for sign in becomes: \verb|TestarData\Kirk|.
+The OrienDB URL and name of the \testar state model database are provided in the server configuration. Based on user feedback, it is also possible to enable multi-database features. Enabling the multi-database feature enables to user to specify the name of the database during logging in. For example, if the user wants to connect to the database \verb|TestarData| and the username is \verb|Kirk|, the username for sign in becomes: \verb|TestarData\Kirk|.
 
 \subsection{New \testar analysis website}
 With the \testar application, it is possible to open an analysis website \cite{thesisMulders}. This website provided several features like viewing the available state models, Test sequences and a graph engine created with Cytoscape.js. The user has to install \testar on their machine to view this analysis website. This thesis presents a new website that can be used outside the \testar application. It got a fresh look and feel, created with Bootstrap\footnote{\url{https://getbootstrap.com}} and a noticeable increase in performance. Figure \ref{fig:ui-home-page} show the renewed available models screen. 

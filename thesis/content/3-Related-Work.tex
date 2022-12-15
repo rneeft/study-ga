@@ -1,6 +1,6 @@
 \chapter{Related work} \label{chapter:related-work}
 
-This chapter covers published research on model abstraction and change detection. Section \ref{sec:what-is-change} will give an definition on what change (detection) is and section \ref{sec:change-detection-research} discusses other approaches of dynamic analysis and change detection. 
+This chapter covers published research on model abstraction and change detection. Section \ref{sec:what-is-change} will give a definition of what change (detection) is, and section \ref{sec:change-detection-research} discusses other approaches to dynamic analysis and change detection. 
 
 \section{What is a change \& change detection?} \label{sec:what-is-change}
 
@@ -12,13 +12,13 @@ Not many research papers could be found that define the word change. A clear def
 
 The definition of the word change can be translated to the context of \testar. The "well-defined, enduring structure" refers to the GUI of the system under test, whereas the "transformation over time" refers to the various version of that SUT. The "something" refers to a part of the GUI that can change, like: Widget tree, a state or actions. 
 
-Besides defining the word change, Rensink also describes the differences between changes and differences. A change is a transformation of the same 'something', whether a difference lacks the property of the same something. For example, what are the differences between two distinct SUT or the same SUT but in two distinct environments or Internet Browsers?
+Besides defining the word change, Rensink also describes the differences between changes and differences. A change is a transformation of the same 'something', whether a difference lacks the property of the same something. For example, what are the differences between two distinct SUTs or the same SUT but in two distinct environments or Internet Browsers?
 
 \section{Change detection in previously published research} \label{sec:change-detection-research}
 
 In theory, executing rudimentary change detection with capture \& replay (CR) application is possible. With CR, the tester works with the application under test to record test cases. The tester can replay their recorded test case in the following application version. If the test cases pass, that part of the application under test is not changed. If the test cases fail, something has changed \cite{VosAho2021}.
 
-Despite using existing test cases being an easy way to ensure the AUT still has the same behaviour as in an earlier version, using them cannot be used to find new features. It is, of course, impossible to record new features in previous versions \cite{VosAho2021}. Many applications adopted the use of generated test cases to find an early form of change detection \cite{aho2019automated}. Three of the those tools are discussed in sections \ref{sec:guitar}, \ref{sec:guitam} and \ref{sec:gui-driver}.
+Despite using existing test cases being an easy way to ensure the AUT still has the same behaviour as in an earlier version, using them cannot be used to find new features. It is, of course, impossible to record new features in previous versions \cite{VosAho2021}. Many applications adopted the use of generated test cases to find an early form of change detection \cite{aho2019automated}. Three of those tools are discussed in sections \ref{sec:guitar}, \ref{sec:guitam} and \ref{sec:gui-driver}.
 
 The section \ref{sec:murphy-tool} discusses the Murphy tool, which uses a state-of-the-art approach in which two consequent applications are modelled, and the two models are compared to find changes \cite{aho2019automated}.
 
